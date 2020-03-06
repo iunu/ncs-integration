@@ -4,18 +4,18 @@ require 'bundler/setup'
 require 'yaml'
 
 # $spec_credentials = YAML.load_file('./spec/spec_OR_credentials.yml')
-$spec_credentials = YAML.load_file('./spec/spec_CA_credentials.yml')
+$spec_credentials = YAML.load_file('./spec/test_credentials.yml')
 
-require 'Metrc'
+require 'CCA'
 
-Metrc.configure do |config|
+CCA.configure do |config|
   config.api_key  = $spec_credentials['api_key']
   config.sandbox  = $spec_credentials['sandbox']
   config.state    = $spec_credentials['state']
 end
 
 
-$client = Metrc::Client.new(debug: true, user_key: $spec_credentials['user_key'])
+$client = CCA::Client.new(debug: true, user_key: $spec_credentials['user_key'])
 
 require "pry"
 Pry.start
