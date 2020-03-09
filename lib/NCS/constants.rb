@@ -1,4 +1,4 @@
-module CCA
+module NCS
   module Constants
   end
 end

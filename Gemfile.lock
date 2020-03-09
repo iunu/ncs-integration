@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    CCA (0.0.1)
+    NCS (0.0.1)
       bundler
       httparty
       rake
@@ -53,7 +53,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  CCA!
+  NCS!
   pry
   webmock
 

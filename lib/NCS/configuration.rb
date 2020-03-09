@@ -1,4 +1,4 @@
-module CCA
+module NCS
   class Configuration
     attr_accessor :api_key,
                   :uri,

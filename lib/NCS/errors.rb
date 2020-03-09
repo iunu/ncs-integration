@@ -1,4 +1,4 @@
-module CCA
+module NCS
   module Errors
     class MissingConfiguration < RuntimeError; end
     class MissingParameter < RuntimeError; end

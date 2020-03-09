@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe CCA::Client do
+describe NCS::Client do
 
 end

@@ -1,12 +1,12 @@
 require 'httparty'
 
-require 'CCA/version'
-require 'CCA/configuration'
-require 'CCA/errors'
-require 'CCA/constants'
-require 'CCA/client'
+require 'NCS/version'
+require 'NCS/configuration'
+require 'NCS/errors'
+require 'NCS/constants'
+require 'NCS/client'
 
-module CCA
+module NCS
   def self.configuration
     @configuration ||= Configuration.new
   end

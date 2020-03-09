@@ -6,16 +6,16 @@ require 'yaml'
 # $spec_credentials = YAML.load_file('./spec/spec_OR_credentials.yml')
 $spec_credentials = YAML.load_file('./spec/test_credentials.yml')
 
-require 'CCA'
+require 'NCS'
 
-CCA.configure do |config|
+NCS.configure do |config|
   config.api_key  = $spec_credentials['api_key']
   config.sandbox  = $spec_credentials['sandbox']
   config.state    = $spec_credentials['state']
 end
 
 
-$client = CCA::Client.new(debug: true, user_key: $spec_credentials['user_key'])
+$client = NCS::Client.new(debug: true, user_key: $spec_credentials['user_key'])
 
 require "pry"
 Pry.start

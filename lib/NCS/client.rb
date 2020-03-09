@@ -2,12 +2,11 @@ require 'net/http'
 require 'uri'
 require 'httparty'
 
-module CCA
+module NCS
   include Constants
   include Errors
 
   class Client
-    #headers 'Content-Type' => 'application/json'
 
     attr_accessor :debug,
                   :response,
@@ -19,7 +18,6 @@ module CCA
       @debug = opts[:debug]
       @api_key = opts[:api_key]
       @uri = opts[:uri]
-      #self.class.default_params Bearer: api_key
       sign_in
     end
 
@@ -50,22 +48,22 @@ module CCA
 
     def api_delete(url, options = {})
       options.merge!('Authorization' => api_key)
-      puts "\nCCA API Request debug\nclient.delete('#{url}', #{options})\n########################\n" if debug
+      puts "\nNCS API Request debug\nclient.delete('#{url}', #{options})\n########################\n" if debug
       self.response = self.class.get(url, options)
       raise_request_errors
       if debug
-        puts "\nCCA API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n"
+        puts "\nNCS API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n"
         response
       end
     end
 
     def api_put(url, options = {})
       options.merge!('Authorization' => api_key)
-      puts "\nCCA API Request debug\nclient.put('#{url}', #{options})\n########################\n" if debug
+      puts "\nNCS API Request debug\nclient.put('#{url}', #{options})\n########################\n" if debug
       self.response = self.class.get(url, options)
       raise_request_errors
       if debug
-        puts "\nCCA API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n"
+        puts "\nNCS API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n"
         response
       end
     end
@@ -344,12 +342,12 @@ module CCA
     end
 
     def configuration
-      CCA.configuration
+      NCS.configuration
     end
 
     def raise_request_errors
       return if response.success?
-      raise Errors::BadRequest.new("An error has occurred while executing your request. #{CCA::Errors.parse_request_errors(response: response)}") if response.bad_request?
+      raise Errors::BadRequest.new("An error has occurred while executing your request. #{NCS::Errors.parse_request_errors(response: response)}") if response.bad_request?
       raise Errors::Unauthorized.new('Invalid or no authentication provided.') if response.unauthorized?
       raise Errors::Forbidden.new('The authenticated user does not have access to the requested resource.') if response.forbidden?
       raise Errors::NotFound.new('The requested resource could not be found (incorrect or invalid URI).') if response.not_found?

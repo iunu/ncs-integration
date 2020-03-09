@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'CCA/version'
+require 'NCS/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'CCA'
-  spec.version       = CCA::VERSION
+  spec.name          = 'NCS'
+  spec.version       = NCS::VERSION
   spec.authors       = ['Joseph B. Ottinger']
   spec.email         = ['joseph@autumncode.com']
 
-  spec.summary       = %q{Pull and push lab data between a LIMS and CCA}
-  spec.description   = %q{A simple gem to pull lab tests and push results to CCA}
+  spec.summary       = %q{Pull and push lab data between a LIMS and NCS}
+  spec.description   = %q{A simple gem to pull lab tests and push results to NCS}
   spec.homepage      = 'https://420tech.org'
   spec.license       = 'MIT'
 
