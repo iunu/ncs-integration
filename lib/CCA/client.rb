@@ -303,6 +303,37 @@ module CCA
 
     #----- TRANSFERS
     #
+    def transfers_create(type, transfer)
+      post('transfers', type, JSON.generate([transfer]))
+    end
+
+    def transfers_get(type)
+      get('transfers', type)
+    end
+
+    def transfers_create_incoming(transfer)
+      transfers_create('incoming', transfer)
+    end
+
+    def transfers_get_incoming
+      transfers_get('incoming')
+    end
+
+    def transfers_create_outgoing(transfer)
+      transfers_create('outgoing', transfer)
+    end
+
+    def transfers_get_outgoing
+      transfers_get('outgoing')
+    end
+
+    def transfers_create_rejected(transfer)
+      transfers_create('rejected', transfer)
+    end
+
+    def transfers_get_rejected
+      transfers_get('rejected')
+    end
 
     private
 
