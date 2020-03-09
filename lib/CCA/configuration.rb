@@ -1,12 +1,23 @@
 module CCA
   class Configuration
     attr_accessor :api_key,
-                  :url,
-                  :sandbox
+                  :uri,
+                  :debug
 
     def incomplete?
-      [:api_key, :url].any? { |e| self.send(e).nil? }
+      [:api_key, :uri].any? { |e| self.send(e).nil? }
     end
 
+    def to_s
+      to_h.to_s
+    end
+
+    def to_h
+      {
+          :api_key => api_key,
+          :uri => uri,
+          :debug => debug
+      }
+    end
   end
 end

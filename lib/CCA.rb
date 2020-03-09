@@ -1,9 +1,10 @@
 require 'httparty'
-#require 'Metrc/constants'
-#require 'Metrc/errors'
-#require 'Metrc/configuration'
-#require 'Metrc/client'
-require "CCA/version"
+
+require 'CCA/version'
+require 'CCA/configuration'
+require 'CCA/errors'
+require 'CCA/constants'
+require 'CCA/client'
 
 module CCA
   def self.configuration
