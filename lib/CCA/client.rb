@@ -45,7 +45,7 @@ module CCA
       puts self.response.headers if debug
       puts self.response.body if debug
       raise_request_errors
-        #JSON.parse(self.response.body)
+      #JSON.parse(self.response.body)
     end
 
     def api_delete(url, options = {})
@@ -109,11 +109,11 @@ module CCA
     #----- ITEMS and ITEM CATEGORIES
     #
     def item_category_create(category)
-      post('items', 'create/categories', JSON.generate([category]) )
+      post('items', 'create/categories', JSON.generate([category]))
     end
 
     def item_category_update(category)
-      post('items', 'update/categories', JSON.generate([category]) )
+      post('items', 'update/categories', JSON.generate([category]))
     end
 
     def item_category_get_all
@@ -122,11 +122,11 @@ module CCA
     end
 
     def item_create(item)
-      post('items', 'create', JSON.generate([item]) )
+      post('items', 'create', JSON.generate([item]))
     end
 
     def item_update
-      post('items', 'update', JSON.generate([item]) )
+      post('items', 'update', JSON.generate([item]))
     end
 
     def item_get_all
@@ -152,7 +152,7 @@ module CCA
     end
 
     def plant_batches_create_package(package)
-      post('plantbatches', 'createplantings', JSON.generate([package]))
+      post('plantbatches', 'createpackages', JSON.generate([package]))
     end
 
     def plant_batches_destroy(plantbatch)
@@ -165,6 +165,48 @@ module CCA
 
     #----- PLANTS
     #
+    def plants_get_all
+      get('plants', 'all')
+    end
+
+    def plants_get_vegetative
+      get('plants', 'vegetative')
+    end
+
+    def plants_get_flowering
+      get('plants', 'flowering')
+    end
+
+    def plants_get_by_id(id)
+      get('plants', "#{id}")
+    end
+
+    def plants_create_planting(planting)
+      post('plants', 'create/plantings', JSON.generate([planting]))
+    end
+
+    def plant_destroy_plant(planting)
+      post('plants', 'destroyplants', JSON.generate([planting]))
+    end
+
+    def plant_change_growth_phases(planting)
+      post('plants', 'changegrowthphases', JSON.generate([planting]))
+    end
+
+    def plants_move_plant(planting)
+      post('plants', 'moveplants', JSON.generate([planting]))
+
+    end
+
+    def plant_manicure_plant(planting)
+      post('plants', 'manicureplants', JSON.generate([planting]))
+
+    end
+
+    def plant_harvest_plant(planting)
+      post('plants', 'harvestplants', JSON.generate([planting]))
+    end
+
     #----- HARVESTS
     #
     #----- PACKAGES
