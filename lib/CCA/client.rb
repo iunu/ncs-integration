@@ -250,6 +250,47 @@ module CCA
 
     #----- PACKAGES
     #
+    def package_get_active
+      get('packages', 'active')
+    end
+
+    def package_get_inactive
+      get('packages', 'inactive')
+    end
+
+    def package_get_onhold
+      get('packages', 'onhold')
+
+    end
+
+    def package_create_package(package)
+      post('packages', 'create', JSON.generate([package]))
+    end
+
+    def package_create_planting(planting)
+      post('packages', 'create/plantings', JSON.generate([planting]))
+    end
+
+    def package_change_item(item)
+      post('packages', 'change/item', JSON.generate([item]))
+    end
+
+    def package_remediate(package)
+      post('packages', 'remediate', JSON.generate([package]))
+    end
+
+    def package_adjust(package)
+      post('packages', 'adjust', JSON.generate([package]))
+    end
+
+    def package_finish(package)
+      post('packages', 'finish', JSON.generate([package]))
+    end
+
+    def package_unfinish(package)
+      post('packages', 'unfinish', JSON.generate([package]))
+    end
+
     #----- SALES
     #
     #----- TRANSFERS
