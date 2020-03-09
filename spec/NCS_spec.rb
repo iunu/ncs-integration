@@ -25,13 +25,13 @@ describe NCS do
 
   it 'creates a room' do
     WebMock.allow_net_connect!
-    #NCS::Client.new(NCS::configuration.to_h).room_create({'Name' => 'Room 523'})
+    NCS::Client.new(NCS::configuration.to_h).room_create({'name' => 'Room '+Time.now.getutc.to_s})
     WebMock.disable_net_connect!
   end
 
   it 'gets rooms' do
     WebMock.allow_net_connect!
-    #NCS::Client.new(NCS::configuration.to_h).room_get_all
+    NCS::Client.new(NCS::configuration.to_h).room_get_all
     WebMock.disable_net_connect!
   end
 

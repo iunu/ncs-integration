@@ -83,10 +83,12 @@ module NCS
     end
 
     def room_create(room)
+      validate_model(room, ['name'], [])
       post('rooms', 'create', JSON.generate([room]))
     end
 
     def room_update(room)
+      validate_model(room, %w(id name))
       post('rooms', 'update', JSON.generate([room]))
     end
 
@@ -334,6 +336,23 @@ module NCS
     end
 
     private
+
+    def validate_model(data, requires = [], optional = [])
+      # validates that the data DEFINITELY contains keys in "requires", and it's okay if it contains the
+      # keys in "optional" but other keys generate errors or warnings.
+      require_failures = []
+      requires.each { |k| require_failures.push(k) unless data.key?(k) }
+      unless require_failures.empty?
+        raise Exception.new "Required fields missing in call: #{require_failures}"
+      end
+      # now we need to validate that there aren't any key values NOT contained in all_names
+      all_names = requires.concat(optional)
+      key_failures=[]
+      data.each_key { |k|  key_failures.push(k) unless all_names.include? k}
+      unless key_failures.empty?
+        raise Exception.new "Data contains prohibited fields: #{key_failures}"
+      end
+    end
 
     def sign_in
       raise Errors::MissingConfiguration if configuration.incomplete?
