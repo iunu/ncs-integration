@@ -209,6 +209,45 @@ module CCA
 
     #----- HARVESTS
     #
+    def harvest_get_active
+      get('harvests', 'active')
+    end
+
+    def harvest_get_inactive
+      get('harvests', 'inactive')
+
+    end
+
+    def harvest_get_onhold
+      get('harvests', 'onhold')
+    end
+
+    def harvest_create_harvest(harvest)
+      post('harvests', 'create', JSON.generate([harvest]))
+    end
+
+    def harvest_create_package(package)
+      post('harvests', 'createpackages', JSON.generate([package]))
+    end
+
+    def harvest_update(harvest)
+      post('harvests', 'update', JSON.generate([harvest]))
+    end
+
+    def harvest_finish(harvest)
+      # This is probably not good. Needs to extract id from harvest and manually set finish date?
+      post('harvests', 'finish', JSON.generate([harvest]))
+    end
+
+    def harvest_unfinish(harvest)
+      # this is probably not good; needs to extract id and only send that
+      post('harvests', 'unfinish', JSON.generate([harvest]))
+    end
+
+    def harvest_remove_waste(harvest)
+      post('harvests', 'removewaste', JSON.generate([harvest]))
+    end
+
     #----- PACKAGES
     #
     #----- SALES
