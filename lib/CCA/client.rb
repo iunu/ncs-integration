@@ -293,6 +293,14 @@ module CCA
 
     #----- SALES
     #
+    def sales_get_all
+      get('sales', 'receipts')
+    end
+
+    def sales_create(sale)
+      post('sales', 'receipts', JSON.generate([sale]))
+    end
+
     #----- TRANSFERS
     #
 
