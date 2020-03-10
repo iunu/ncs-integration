@@ -141,10 +141,12 @@ module NCS
     end
 
     def item_create(item)
+      validate_model(item, [], extract_keys(ItemModel))
       post('items', 'create', JSON.generate([item]))
     end
 
     def item_update
+      validate_model(item, [], extract_keys(ItemModel))
       post('items', 'update', JSON.generate([item]))
     end
 
@@ -406,6 +408,42 @@ module NCS
     end
   end
 
+  ItemModel = JSON.parse(<<~ITEM_MODEL
+    {
+           "Id": 2,
+           "ProductCategoryName": "Buds",
+           "Name": "Buds Item",
+           "UnitOfMeasureName": "Ounces",
+           "AdministrationMethod": null,
+           "StrainName": "Spring Hill Kush",
+           "IntermediaryProductUsed": false,
+           "UnitCbdPercent": null,
+           "UnitCbdContent": null,
+           "UnitCbdContentUnitOfMeasureName": null,
+           "UnitThcPercent": null,
+           "UnitThcContent": null,
+           "UnitThcContentUnitOfMeasureName": null,
+           "UnitVolume": null,
+           "UnitVolumeUnitOfMeasureName": null,
+           "UnitWeight": null,
+           "UnitWeightUnitOfMeasureName": null,
+           "ServingSize": null,
+           "SupplyDurationDays": null,
+           "Ingredients": null,
+           "Intermediaries": [
+                {
+                    "Id": 1,
+                    "Name": "Interm 1",
+                    "Type": "Mush"
+                },
+                {
+                    "Name": "Interm 2",
+                    "Type": "Tar"
+                }
+            ]
+        }
+  ITEM_MODEL
+  )
   ItemCategoryModel = JSON.parse(<<~ITEM_CATEGORY_MODEL
     {
       "Name": "Infused",
