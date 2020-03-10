@@ -170,18 +170,22 @@ module NCS
     end
 
     def plant_batches_create_planting(planting)
+      validate_model(planting, [], extract_keys(PlantBatchModel))
       post('plantbatches', 'createplantings', JSON.generate([planting]))
     end
 
     def plant_batches_create_package(package)
+      validate_model(package, [], extract_keys(PlantPackageModel))
       post('plantbatches', 'createpackages', JSON.generate([package]))
     end
 
     def plant_batches_destroy(plantbatch)
+      validate_model(planting, [], extract_keys(PlantBatchModel))
       post('plantbatches', 'destroy', JSON.generate([plantbatch]))
     end
 
     def plant_batches_change_growth_phase(plantbatch)
+      validate_model(planting, [], extract_keys(PlantBatchModel))
       post('plantbatches', 'changegrowthphase', JSON.generate([plantbatch]))
     end
 
