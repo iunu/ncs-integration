@@ -1,13 +1,15 @@
+# frozen_string_literal: true
 require 'net/http'
 require 'uri'
 require 'httparty'
 
+# NCS module
 module NCS
   include Constants
   include Errors
 
+  # Client class
   class Client
-
     attr_accessor :debug,
                   :response,
                   :api_key,
@@ -24,31 +26,33 @@ module NCS
     def api_get(url, options = {})
       puts "in api_get: #{@uri}#{url}" if @debug
       self.response = HTTParty.get("#{@uri}#{url}",
-                                   :headers => {'Authorization' => "Bearer #{@api_key}", 'Content-Type' => 'application/json'}
+                                   headers: {'Authorization' => "Bearer #{@api_key}", 'Content-Type' => 'application/json'}
       )
-      puts self.response.response.code if debug
-      puts self.response.headers if debug
-      puts self.response.body if debug
+      puts response.response.code if debug
+      puts response.headers if debug
+      puts response.body if debug
       raise_request_errors
-      JSON.parse(self.response.body)
+      JSON.parse(response.body)
     end
 
     def api_post(url, body)
       puts "in api_post #{@uri}#{url}" if @debug
       self.response = HTTParty.post("#{@uri}#{url}",
-                                    :headers => {'Authorization' => "Bearer #{@api_key}", 'Content-Type' => 'application/json'},
-                                    :body => body
+                                    headers: {'Authorization' => "Bearer #{@api_key}", 'Content-Type' => 'application/json'},
+                                    body: body
       )
-      puts self.response.response.code if debug
-      puts self.response.headers if debug
-      puts self.response.body if debug
+      puts response.response.code if debug
+      puts response.headers if debug
+      puts response.body if debug
       raise_request_errors
       #JSON.parse(self.response.body)
     end
 
     def api_delete(url, options = {})
       options.merge!('Authorization' => api_key)
-      puts "\nNCS API Request debug\nclient.delete('#{url}', #{options})\n########################\n" if debug
+      if debug
+        puts "\nNCS API Request debug\nclient.delete('#{url}', #{options})\n########################\n"
+      end
       self.response = self.class.get(url, options)
       raise_request_errors
       if debug
@@ -59,7 +63,9 @@ module NCS
 
     def api_put(url, options = {})
       options.merge!('Authorization' => api_key)
-      puts "\nNCS API Request debug\nclient.put('#{url}', #{options})\n########################\n" if debug
+      if debug
+        puts "\nNCS API Request debug\nclient.put('#{url}', #{options})\n########################\n"
+      end
       self.response = self.class.get(url, options)
       raise_request_errors
       if debug
@@ -88,17 +94,24 @@ module NCS
     end
 
     def room_update(room)
-      validate_model(room, %w(id name))
+      validate_model(room, %w[id name])
       post('rooms', 'update', JSON.generate([room]))
     end
 
     #----- STRAINS
     #
     def strain_create(strain)
+      validate_model(strain,
+                     ['name'],
+                     extract_keys(RoomModel))
       post('strains', 'create', JSON.generate([strain]))
     end
 
     def strain_update(strain)
+      validate_model(strain,
+                     %w[name id],
+                     extract_keys(RoomModel))
+
       post('strains', 'update', JSON.generate([strain]))
     end
 
@@ -109,10 +122,16 @@ module NCS
     #----- ITEMS and ITEM CATEGORIES
     #
     def item_category_create(category)
+      validate_model(category,
+                     [],
+                     extract_keys(ItemCategoryModel))
       post('items', 'create/categories', JSON.generate([category]))
     end
 
     def item_category_update(category)
+      validate_model(category,
+                     [],
+                     extract_keys(ItemCategoryModel))
       post('items', 'update/categories', JSON.generate([category]))
     end
 
@@ -178,7 +197,7 @@ module NCS
     end
 
     def plants_get_by_id(id)
-      get('plants', "#{id}")
+      get('plants', id.to_s)
     end
 
     def plants_create_planting(planting)
@@ -343,14 +362,14 @@ module NCS
       require_failures = []
       requires.each { |k| require_failures.push(k) unless data.key?(k) }
       unless require_failures.empty?
-        raise Exception.new "Required fields missing in call: #{require_failures}"
+        raise Exception, "Required fields missing in call: #{require_failures}"
       end
       # now we need to validate that there aren't any key values NOT contained in all_names
       all_names = requires.concat(optional)
-      key_failures=[]
-      data.each_key { |k|  key_failures.push(k) unless all_names.include? k}
+      key_failures = []
+      data.each_key { |k| key_failures.push(k) unless all_names.include? k }
       unless key_failures.empty?
-        raise Exception.new "Data contains prohibited fields: #{key_failures}"
+        raise Exception, "Data contains prohibited fields: #{key_failures}"
       end
     end
 
@@ -366,13 +385,67 @@ module NCS
 
     def raise_request_errors
       return if response.success?
-      raise Errors::BadRequest.new("An error has occurred while executing your request. #{NCS::Errors.parse_request_errors(response: response)}") if response.bad_request?
-      raise Errors::Unauthorized.new('Invalid or no authentication provided.') if response.unauthorized?
-      raise Errors::Forbidden.new('The authenticated user does not have access to the requested resource.') if response.forbidden?
-      raise Errors::NotFound.new('The requested resource could not be found (incorrect or invalid URI).') if response.not_found?
-      raise Errors::TooManyRequests.new('The limit of API calls allowed has been exceeded. Please pace the usage rate of the API more apart.') if response.too_many_requests?
-      raise Errors::InternalServerError.new('An error has occurred while executing your request.') if response.server_error?
+      if response.bad_request?
+        raise Errors::BadRequest, "An error has occurred while executing your request. #{NCS::Errors.parse_request_errors(response: response)}"
+      end
+      if response.unauthorized?
+        raise Errors::Unauthorized, 'Invalid or no authentication provided.'
+      end
+      if response.forbidden?
+        raise Errors::Forbidden, 'The authenticated user does not have access to the requested resource.'
+      end
+      if response.not_found?
+        raise Errors::NotFound, 'The requested resource could not be found (incorrect or invalid URI).'
+      end
+      if response.too_many_requests?
+        raise Errors::TooManyRequests, 'The limit of API calls allowed has been exceeded. Please pace the usage rate of the API more apart.'
+      end
+      if response.server_error?
+        raise Errors::InternalServerError, 'An error has occurred while executing your request.'
+      end
     end
   end
 
+  ItemCategoryModel = JSON.parse(<<~ITEM_CATEGORY_MODEL
+    {
+      "Name": "Infused",
+      "ProductCategoryType": "InfusedEdible",
+      "QuantityType": "CountBased",
+      "DefaultLabTestingState": "NotSubmitted",
+      "RequiresApproval": false,
+      "RequiresAdministrationMethod": false,
+      "RequiresStrain": true,
+      "RequiresUnitCbdPercent": false,
+      "RequiresUnitCbdContent": false,
+      "RequiresUnitThcPercent": false,
+      "RequiresUnitThcContent": false,
+      "RequiresUnitVolume": false,
+      "RequiresUnitWeight": false,
+      "RequiresServingSize": false,
+      "RequiresSupplyDurationDays": false,
+      "UnitQuantityMultiplier": null,
+      "UnitQuantityUnitOfMeasureName": null,
+      "RequiresIngredients": false,
+      "RequiresProductPhoto": false,
+      "CanContainSeeds": true,
+      "CanBeRemediated": true
+    }
+  ITEM_CATEGORY_MODEL
+  )
+  RoomModel = JSON.parse(<<~ROOM_MODEL
+    {
+        "id": 0,
+        "locationId": 0,
+        "organizationId": 0,
+        "vendorId": 0,
+        "name": "string",
+        "createDate": "2020-03-09T18:15:13.028Z",
+        "updateDate": "2020-03-09T18:15:13.028Z"
+    }
+  ROOM_MODEL
+  )
+
+  def extract_keys(model)
+    model.keys
+  end
 end
