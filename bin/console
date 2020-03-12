@@ -5,14 +5,14 @@ require 'yaml'
 
 spec_credentials = YAML.load_file('./spec/test_credentials.yml')
 
-require 'NCS'
+require 'ncs'
 
 NCS.configure do |config|
   config.api_key = spec_credentials.fetch('api_key')
   config.uri     = spec_credentials.fetch('uri')
 end
 
-$client = NCS::Client.new(debug: true) # rubocop:disable Style/GlobalVars
+$client = NCS::Client.new(debug: spec_credentials.has_key?('debug')) # rubocop:disable Style/GlobalVars
 
 require 'pry'
 Pry.start
