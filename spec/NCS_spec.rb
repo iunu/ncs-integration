@@ -10,6 +10,6 @@ describe NCS do
       config.api_key = nil
     end
 
-    expect(described_class.configuration.be_incomplete).to be_truthy
+    expect(described_class.configuration.incomplete?).to be_truthy # rubocop:disable RSpec/PredicateMatcher
   end
 end
