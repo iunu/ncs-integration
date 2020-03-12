@@ -1,15 +1,16 @@
 require 'spec_helper'
 
-describe NCS::Client do
-  before(:each) { configure_client }
+describe NCS::Client do # rubocop:disable Metrics/BlockLength
   subject { described_class.new(NCS.configuration.to_h) }
+
+  before { configure_client }
 
   it 'does not initialize without credentials' do
     NCS.configure do |config|
       config.api_key = nil
     end
 
-    expect { NCS::Client.new }.to(raise_error(NCS::Errors::MissingConfiguration))
+    expect { described_class.new }.to(raise_error(NCS::Errors::MissingConfiguration))
   end
 
   it 'creates a room' do
@@ -26,7 +27,7 @@ describe NCS::Client do
     subject.room_get_all
   end
 
-  it 'updates a room' do
+  it 'updates a room' do # rubocop:disable RSpec/ExampleLength
     stub_request(:get, 'https://api.ncsanalytics.com/pos/rooms/v1/all')
       .to_return(body: '[ { "id": 1, "name": "Castle Black" } ]', status: '200')
     stub_request(:post, 'https://api.ncsanalytics.com/pos/rooms/v1/update')

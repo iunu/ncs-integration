@@ -117,3 +117,6 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
