@@ -1,4 +1,5 @@
-require_relative 'data_model.rb' # frozen_string_literal: true
+require_relative 'data_model.rb'
+
 require 'net/http'
 require 'uri'
 require 'httparty'
@@ -12,8 +13,7 @@ module NCS
   # Client class
   class Client
     include HTTParty
-    headers 'Content-Type' => 'application/json'
-
+    headers 'Content-Type': 'application/json'
 
     attr_accessor :debug,
                   :response,
@@ -28,12 +28,10 @@ module NCS
       sign_in
     end
 
-    def api_get(url, options = {})
+    def api_get(url)
       puts "in api_get: #{@uri}#{url}" if @debug
       @response = self.class.get("#{@uri}#{url}",
-                                 headers: { Authorization: "Bearer #{@api_key}" } )
-
-
+                                 headers: { Authorization: "Bearer #{@api_key}" })
 
       if debug
         puts @response.response.code
@@ -62,35 +60,27 @@ module NCS
     end
 
     def api_delete(url, options = {})
-      options.merge!(Authorization: api_key)
+      option[:Authorization] = api_key
 
-      if debug
-        puts "\nNCS API Request debug\nclient.delete('#{url}', #{options})\n########################\n"
-      end
+      puts "\nNCS API Request debug\nclient.delete('#{url}', #{options})\n########################\n" if debug
 
       @response = self.class.get(url, options)
       raise_request_errors
 
-      if debug
-        puts "\nNCS API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n"
-      end
+      puts "\nNCS API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n" if debug
 
       @response
     end
 
     def api_put(url, options = {})
-      options.merge!(Authorization: api_key)
+      option[:Authorization] = api_key
 
-      if debug
-        puts "\nNCS API Request debug\nclient.put('#{url}', #{options})\n########################\n"
-      end
+      puts "\nNCS API Request debug\nclient.put('#{url}', #{options})\n########################\n" if debug
 
       @response = self.class.get(url, options)
       raise_request_errors
 
-      if debug
-        puts "\nNCS API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n"
-      end
+      puts "\nNCS API Response debug\n#{response.to_s[0..360]}\n[200 OK]\n########################\n" if debug
 
       @response
     end
@@ -149,7 +139,6 @@ module NCS
 
     def item_category_get_all
       get(:items, :categories)
-
     end
 
     def item_create(item)
@@ -232,7 +221,6 @@ module NCS
 
     def plants_move_plant(planting)
       post(:plants, :moveplants, JSON.generate([planting]))
-
     end
 
     def plant_manicure_plant(planting)
@@ -375,24 +363,21 @@ module NCS
       # validates that the data DEFINITELY contains keys in "requires", and it's okay if it contains the
       # keys in "optional" but other keys generate errors or warnings.
       require_failures = []
-      requires.each { |k| require_failures.push(k) unless data.key?(k) }
+      requires.each {|k| require_failures.push(k) unless data.key?(k) }
 
-      unless require_failures.empty?
-        raise Exception, "Required fields missing in call: #{require_failures}"
-      end
+      raise Exception, "Required fields missing in call: #{require_failures}" unless require_failures.empty?
 
       # now we need to validate that there aren't any key values NOT contained in all_names
       all_names = requires.concat(optional)
       key_failures = []
-      data.each_key { |k| key_failures.push(k) unless all_names.include? k }
+      data.each_key {|k| key_failures.push(k) unless all_names.include? k }
 
-      unless key_failures.empty?
-        raise Exception, "Data contains prohibited fields: #{key_failures}"
-      end
+      raise Exception, "Data contains prohibited fields: #{key_failures}" unless key_failures.empty?
     end
 
     def sign_in
       raise Errors::MissingConfiguration if configuration.incomplete?
+
       true
     end
 
@@ -400,32 +385,20 @@ module NCS
       NCS.configuration
     end
 
-    def raise_request_errors
+    def raise_request_errors # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return if @response.success?
 
-      if @response.bad_request?
-        raise Errors::BadRequest, "An error has occurred while executing your request. #{NCS::Errors.parse_request_errors(response: response)}"
-      end
+      raise Errors::BadRequest, "An error has occurred while executing your request. #{NCS::Errors.parse_request_errors(response: response)}" if @response.bad_request? # rubocop:disable Layout/LineLength
 
-      if @response.unauthorized?
-        raise Errors::Unauthorized, 'Invalid or no authentication provided.'
-      end
+      raise Errors::Unauthorized, 'Invalid or no authentication provided.' if @response.unauthorized?
 
-      if @response.forbidden?
-        raise Errors::Forbidden, 'The authenticated user does not have access to the requested resource.'
-      end
+      raise Errors::Forbidden, 'The authenticated user does not have access to the requested resource.' if @response.forbidden? # rubocop:disable Layout/LineLength
 
-      if @response.not_found?
-        raise Errors::NotFound, 'The requested resource could not be found (incorrect or invalid URI).'
-      end
+      raise Errors::NotFound, 'The requested resource could not be found (incorrect or invalid URI).' if @response.not_found? # rubocop:disable Layout/LineLength
 
-      if @response.too_many_requests?
-        raise Errors::TooManyRequests, 'The limit of API calls allowed has been exceeded. Please pace the usage rate of the API more apart.'
-      end
+      raise Errors::TooManyRequests, 'The limit of API calls allowed has been exceeded. Please pace the usage rate of the API more apart.' if @response.too_many_requests? # rubocop:disable Layout/LineLength
 
-      if @response.server_error?
-        raise Errors::InternalServerError, 'An error has occurred while executing your request.'
-      end
+      raise Errors::InternalServerError, 'An error has occurred while executing your request.' if @response.server_error? # rubocop:disable Layout/LineLength
     end
   end
 end
