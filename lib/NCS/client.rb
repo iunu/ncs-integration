@@ -1,4 +1,4 @@
-require_relative 'data_model.rb'
+require_relative 'model.rb'
 
 require 'net/http'
 require 'uri'
@@ -6,7 +6,7 @@ require 'httparty'
 
 # NCS module
 module NCS
-  include DataModel
+  include Model
   include Constants
   include Errors
 
@@ -112,12 +112,12 @@ module NCS
     #----- STRAINS
     #
     def strain_create(strain)
-      validate_model(strain, ['name'], extract_keys(RoomModel))
+      validate_model(strain, ['name'], extract_keys(ROOM_MODEL))
       post(:strains, :create, JSON.generate([strain]))
     end
 
     def strain_update(strain)
-      validate_model(strain, %w[name id], extract_keys(RoomModel))
+      validate_model(strain, %w[name id], extract_keys(ROOM_MODEL))
       post(:strains, :update, JSON.generate([strain]))
     end
 
@@ -128,12 +128,12 @@ module NCS
     #----- ITEMS and ITEM CATEGORIES
     #
     def item_category_create(category)
-      validate_model(category, [], extract_keys(ItemCategoryModel))
+      validate_model(category, [], extract_keys(ITEM_CATEGORY_MODEL))
       post(:items, :createcategories, JSON.generate([category]))
     end
 
     def item_category_update(category)
-      validate_model(category, [], extract_keys(ItemCategoryModel))
+      validate_model(category, [], extract_keys(ITEM_CATEGORY_MODEL))
       post(:items, :updatecategories, JSON.generate([category]))
     end
 
@@ -142,12 +142,12 @@ module NCS
     end
 
     def item_create(item)
-      validate_model(item, [], extract_keys(ItemModel))
+      validate_model(item, [], extract_keys(ITEM_MODEL))
       post(:items, :create, JSON.generate([item]))
     end
 
     def item_update
-      validate_model(item, [], extract_keys(ItemModel))
+      validate_model(item, [], extract_keys(ITEM_MODEL))
       post(:items, :update, JSON.generate([item]))
     end
 
@@ -170,22 +170,22 @@ module NCS
     end
 
     def plant_batches_create_planting(planting)
-      validate_model(planting, [], extract_keys(PlantBatchModel))
+      validate_model(planting, [], extract_keys(PLANT_PACKAGE_MODEL))
       post(:plantbatches, :createplantings, JSON.generate([planting]))
     end
 
     def plant_batches_create_package(package)
-      validate_model(package, [], extract_keys(PlantPackageModel))
+      validate_model(package, [], extract_keys(PLANT_PACKAGE_MODEL))
       post(:plantbatches, :createpackages, JSON.generate([package]))
     end
 
     def plant_batches_destroy(plantbatch)
-      validate_model(planting, [], extract_keys(PlantBatchModel))
+      validate_model(planting, [], extract_keys(PLANT_PACKAGE_MODEL))
       post(:plantbatches, :destroy, JSON.generate([plantbatch]))
     end
 
     def plant_batches_change_growth_phase(plantbatch)
-      validate_model(planting, [], extract_keys(PlantBatchModel))
+      validate_model(planting, [], extract_keys(PLANT_PACKAGE_MODEL))
       post(:plantbatches, :changegrowthphase, JSON.generate([plantbatch]))
     end
 
