@@ -8,12 +8,11 @@ spec_credentials = YAML.load_file('./spec/test_credentials.yml')
 require 'NCS'
 
 NCS.configure do |config|
-  config.api_key  = spec_credentials.fetch('api_key')
-  config.sandbox  = spec_credentials.fetch('sandbox')
-  config.state    = spec_credentials.fetch('state')
+  config.api_key = spec_credentials.fetch('api_key')
+  config.uri     = spec_credentials.fetch('uri')
 end
 
-$client = NCS::Client.new(debug: true, user_key: spec_credentials.fetch('user_key')) # rubocop:disable Style/GlobalVars
+$client = NCS::Client.new(debug: true) # rubocop:disable Style/GlobalVars
 
 require 'pry'
 Pry.start
