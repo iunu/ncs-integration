@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe NCS do
   it 'has a version number' do
-    expect(NCS::VERSION).not_to be nil
+    expect(described_class::VERSION).not_to be nil
   end
 
   it 'accepts a configuration, requires a complete configuration' do
-    NCS.configure do |config|
+    described_class.configure do |config|
       config.api_key = nil
     end
 
-    expect(NCS.configuration.incomplete?).to be_truthy
+    expect(described_class.configuration.be_incomplete).to be_truthy
   end
 end
