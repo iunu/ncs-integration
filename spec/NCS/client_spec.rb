@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe NCS::Client do
   before(:each) { configure_client }
-  let(:subject) { described_class.new(NCS.configuration.to_h) }
+  subject { described_class.new(NCS.configuration.to_h) }
 
   it 'does not initialize without credentials' do
     NCS.configure do |config|
