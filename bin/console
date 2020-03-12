@@ -2,10 +2,9 @@
 
 require 'bundler/setup'
 require 'yaml'
+require 'ncs'
 
 spec_credentials = YAML.load_file('./spec/test_credentials.yml')
-
-require 'ncs'
 
 NCS.configure do |config|
   config.api_key = spec_credentials.fetch('api_key')

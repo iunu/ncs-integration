@@ -22,9 +22,9 @@ module NCS
                   :uri
 
     def initialize(opts = {})
-      @debug = opts[:debug]
-      @api_key = opts[:api_key]
-      @uri = opts[:uri]
+      @debug   = opts[:debug] || NCS.configuration.debug
+      @api_key = opts[:api_key] || NCS.configuration.api_key
+      @uri     = opts[:uri] || NCS.configuration.uri
       sign_in
     end
 
