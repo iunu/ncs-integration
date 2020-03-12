@@ -5,7 +5,7 @@ module NCS
                   :debug
 
     def incomplete?
-      [:api_key, :uri].any? { |e| self.send(e).nil? }
+      %i[api_key uri].any? {|e| send(e).nil? }
     end
 
     def to_s
@@ -14,9 +14,9 @@ module NCS
 
     def to_h
       {
-          :api_key => api_key,
-          :uri => uri,
-          :debug => debug
+        api_key: api_key,
+        uri: uri,
+        debug: debug
       }
     end
   end
