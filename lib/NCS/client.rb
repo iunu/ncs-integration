@@ -22,7 +22,7 @@ module NCS
                   :uri
 
     def initialize(opts = {})
-      @debug   = opts[:debug] || NCS.configuration.debug
+      @debug   = opts[:debug] || NCS.configuration.debug || false
       @api_key = opts[:api_key] || NCS.configuration.api_key
       @uri     = opts[:uri] || NCS.configuration.uri
       sign_in
@@ -162,7 +162,7 @@ module NCS
     end
 
     def plant_batches_get_inactive
-      get(:plantbatches, :active)
+      get(:plantbatches, :inactive)
     end
 
     def plant_batches_get_by_id(id)
