@@ -11,7 +11,7 @@ module NCS
     @configuration ||= Configuration.new
   end
 
-  def self.configure(&block)
+  def self.configure(&_block)
     yield configuration
   end
 end

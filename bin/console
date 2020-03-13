@@ -2,20 +2,16 @@
 
 require 'bundler/setup'
 require 'yaml'
+require 'ncs'
 
-# $spec_credentials = YAML.load_file('./spec/spec_OR_credentials.yml')
-$spec_credentials = YAML.load_file('./spec/test_credentials.yml')
-
-require 'NCS'
+spec_credentials = YAML.load_file('./spec/test_credentials.yml')
 
 NCS.configure do |config|
-  config.api_key  = $spec_credentials['api_key']
-  config.sandbox  = $spec_credentials['sandbox']
-  config.state    = $spec_credentials['state']
+  config.api_key = spec_credentials.fetch('api_key')
+  config.uri     = spec_credentials.fetch('uri')
 end
 
+$client = NCS::Client.new(debug: spec_credentials.has_key?('debug')) # rubocop:disable Style/GlobalVars
 
-$client = NCS::Client.new(debug: true, user_key: $spec_credentials['user_key'])
-
-require "pry"
+require 'pry'
 Pry.start
