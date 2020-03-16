@@ -2,7 +2,7 @@
 
 require 'bundler/setup'
 require 'yaml'
-require 'ncs'
+require 'NCS'
 
 spec_credentials = YAML.load_file('./spec/test_credentials.yml')
 

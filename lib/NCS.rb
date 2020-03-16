@@ -1,9 +1,9 @@
 require 'httparty'
 
-require 'ncs/version'
-require 'ncs/configuration'
-require 'ncs/errors'
-require 'ncs/client'
+require 'NCS/version'
+require 'NCS/configuration'
+require 'NCS/errors'
+require 'NCS/client'
 
 module NCS
   def self.configuration
