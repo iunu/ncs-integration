@@ -1,11 +1,9 @@
 PATH
   remote: .
   specs:
-    NCS (0.0.1)
+    NCS (0.0.2)
       bundler
       httparty
-      rake
-      rspec
 
 GEM
   remote: https://rubygems.org/
@@ -117,6 +115,8 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   pry
+  rake
+  rspec
   rubocop
   rubocop-performance
   rubocop-rspec

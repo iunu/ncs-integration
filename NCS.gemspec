@@ -1,6 +1,6 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ncs/version'
+require 'NCS/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'NCS'
@@ -20,8 +20,6 @@ Gem::Specification.new do |spec|
   # Runtime dependencies
   spec.add_dependency 'bundler'
   spec.add_dependency 'httparty'
-  spec.add_dependency 'rake'
-  spec.add_dependency 'rspec'
 
   # Development dependencies
   spec.add_development_dependency 'ci_reporter'
@@ -29,6 +27,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'guard-rubocop'
   spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-performance'
   spec.add_development_dependency 'rubocop-rspec'
