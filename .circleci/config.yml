@@ -29,6 +29,11 @@ jobs:
             - vendor/bundle
 
       - run:
+          name: Create test credentials
+          command: |
+            echo "api_key: NightgathersandnowmywatchbeginsItshallnotenduntilmydeathIshalltakenowifeholdnolandsfathernochildrenIshallwearnocrownsandwinnogloryIshallliveanddieatmypostIamtheswordinthedarknessIamthewatcheronthewallsIamtheshieldthatguardstherealmsofmenIpledgemylifeandhonortotheNightsWatchforthisnightandallthenightstocome\nuri: https://vendortest-posapi.ncsanalytics.com" > spec/test_credentials.yml
+
+      - run:
           name: Run rspec in parallel
           command: |
             bundle exec rspec --out test_results/rspec.xml \
