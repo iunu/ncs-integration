@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ncs_analytics (0.0.2)
+    ncs_analytics (0.1.0)
       bundler
       hash_validator
       httparty

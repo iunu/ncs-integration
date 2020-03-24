@@ -12,8 +12,4 @@ describe NcsAnalytics do
 
     expect(described_class.configuration.incomplete?).to be_truthy # rubocop:disable RSpec/PredicateMatcher
   end
-
-  it 'has the models methods' do
-    expect(described_class).to respond_to(:extract_keys)
-  end
 end
