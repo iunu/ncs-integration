@@ -6,16 +6,15 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:2.6.5-stretch
-    executor: ruby/default
     steps:
       - checkout
 
       - ruby/bundle-install
 
       - restore_cache:
-        keys:
-          - ncs-analytics-bundle-v2-{{ checksum "Gemfile.lock" }}
-          - ncs-analytics-bundle-v2-
+          keys:
+            - ncs-analytics-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - ncs-analytics-bundle-v2-
 
       - run:
           name: Bundle Install
