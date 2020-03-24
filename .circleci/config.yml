@@ -9,7 +9,9 @@ jobs:
     steps:
       - checkout
 
-      - ruby/bundle-install
+      - run:
+          name: Bundler install
+          command: gem install bundler:2.1.4
 
       - restore_cache:
           keys:
