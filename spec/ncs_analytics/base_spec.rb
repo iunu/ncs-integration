@@ -51,11 +51,8 @@ describe NcsAnalytics::Base do
     end
 
     it 'calls the indicated path with the setted resource' do # rubocop:disable RSpec/MultipleExpectations
-      allow_any_instance_of(described_class).to receive(:request).and_return(status: 200, body: {})
-
+      expect_any_instance_of(described_class).to receive(:request).at_least(:once).with(:all).and_return(status: 200, body: {})
       expect { subject.get(:all) }.not_to raise_error
-
-      expect(subject).to have_received(:request) # rubocop:disable RSpec/SubjectStub
     end
   end
 
@@ -67,11 +64,8 @@ describe NcsAnalytics::Base do
     end
 
     it 'calls the indicated path with the setted resource' do # rubocop:disable RSpec/MultipleExpectations
-      allow_any_instance_of(described_class).to receive(:request).and_return(status: 200, body: {})
-
+      expect_any_instance_of(described_class).to receive(:request).at_least(:once).with(:create, :post, '{}').and_return(status: 200, body: {})
       expect { subject.post(:create, {}) }.not_to raise_error
-
-      expect(subject).to have_received(:request) # rubocop:disable RSpec/SubjectStub
     end
   end
 

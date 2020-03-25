@@ -8,23 +8,24 @@ module NcsAnalytics
   class Base
     include HTTParty
 
+    SCHEMA = {}
     headers 'content-type': 'application/json'
 
-    attr_accessor :debug,
-                  :response,
-                  :api_key,
-                  :uri,
-                  :options
+    attr_reader :debug,
+                :response,
+                :api_key,
+                :uri,
+                :resource
 
-    def initialize(resource, validation_hash = nil, opts = {}) # rubocop:disable Metrics/AbcSize
-      @resource = resource
+    def initialize(resource = nil, validation_hash = nil, opts = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      @resource = resource || "#{self.class.name.split('::').last.downcase}s".to_sym
       @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
       @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
       @uri      = opts[:uri] || NcsAnalytics.configuration.uri
 
       sign_in
 
-      @validation_hash = validation_hash
+      @validation_hash = validation_hash || self.class::SCHEMA || {}
       self.class.base_uri @uri
       self.class.headers Authorization: @api_key
     end
@@ -40,10 +41,13 @@ module NcsAnalytics
     protected
 
     def valid?(payload)
-      return true unless @validation_hash
+      if payload.is_a?(Array)
+        payload.each {|data| validate(data) }
+      else
+        validate(payload)
+      end
 
-      validator = HashValidator.validate(payload, @validation_hash)
-      raise Errors::InvalidPayload, "Invalid payload provided: #{validator.errors}" unless validator.valid?
+      true
     end
 
     private
@@ -54,6 +58,12 @@ module NcsAnalytics
 
     def configuration
       NcsAnalytics.configuration
+    end
+
+    def validate(payload)
+      validator = HashValidator.validate(payload, @validation_hash)
+      p validator.errors
+      raise Errors::InvalidPayload, "Invalid payload provided: #{validator.errors}" unless validator.valid?
     end
 
     def request(path = '', verb = :get, payload = '')
