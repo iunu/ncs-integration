@@ -76,16 +76,6 @@ describe NcsAnalytics::Base do
   end
 
   describe '#request' do
-    context 'when no resource is defined' do
-      it 'raises a BadRequest exception' do
-        stub_request(:get, 'https://vendortest-posapi.ncsanalytics.com/pos/items/v1/all')
-          .with(headers: { 'Content-Type': 'application/json' })
-          .to_return(status: 400, body: '{}')
-
-        expect { subject.send(:request, :all) }.to raise_error(NcsAnalytics::Errors::BadRequest)
-      end
-    end
-
     context 'when a 400 is returned' do
       it 'raises a BadRequest exception' do
         stub_request(:get, 'https://vendortest-posapi.ncsanalytics.com/pos/items/v1/all')

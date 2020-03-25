@@ -57,8 +57,6 @@ module NcsAnalytics
     end
 
     def request(path = '', verb = :get, payload = '')
-      raise Errors::BadRequest, 'You need to specify a #resource' unless @resource
-
       puts "[#{verb.uppercase}] #{@resource}: #{path}" if @debug
 
       @response = self.class.send(verb, "/pos/#{@resource}/v1/#{path}", body: payload)

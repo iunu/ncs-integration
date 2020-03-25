@@ -1,6 +1,5 @@
 module NcsAnalytics
   module Errors
-    class MissingResource < RuntimeError; end
     class MissingConfiguration < RuntimeError; end
     class InvalidPayload < RuntimeError; end
     class RequestError < RuntimeError; end
