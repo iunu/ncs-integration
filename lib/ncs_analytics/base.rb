@@ -14,15 +14,17 @@ module NcsAnalytics
                   :response,
                   :api_key,
                   :uri,
-                  :validation_hash
+                  :options
 
-    def initialize(opts = {})
-      @debug   = opts[:debug] || NcsAnalytics.configuration.debug || false
-      @api_key = opts[:api_key] || NcsAnalytics.configuration.api_key
-      @uri     = opts[:uri] || NcsAnalytics.configuration.uri
+    def initialize(resource, validation_hash = nil, opts = {}) # rubocop:disable Metrics/AbcSize
+      @resource = resource
+      @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
+      @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
+      @uri      = opts[:uri] || NcsAnalytics.configuration.uri
 
       sign_in
 
+      @validation_hash = validation_hash
       self.class.base_uri @uri
       self.class.headers Authorization: @api_key
     end
@@ -37,17 +39,11 @@ module NcsAnalytics
 
     protected
 
-    def validate_with(hash)
-      @validation_hash = hash
-    end
-
     def valid?(payload)
+      return true unless @validation_hash
+
       validator = HashValidator.validate(payload, @validation_hash)
       raise Errors::InvalidPayload, "Invalid payload provided: #{validator.errors}" unless validator.valid?
-    end
-
-    def resource(name)
-      @resource_name = name
     end
 
     private
@@ -61,11 +57,11 @@ module NcsAnalytics
     end
 
     def request(path = '', verb = :get, payload = '')
-      raise Errors::BadRequest, 'You need to specify a #resource' unless @resource_name
+      raise Errors::BadRequest, 'You need to specify a #resource' unless @resource
 
-      puts "[#{verb.uppercase}] #{@resource_name}: #{path}" if @debug
+      puts "[#{verb.uppercase}] #{@resource}: #{path}" if @debug
 
-      @response = self.class.send(verb, "/pos/#{@resource_name}/v1/#{path}", body: payload)
+      @response = self.class.send(verb, "/pos/#{@resource}/v1/#{path}", body: payload)
 
       if @debug
         puts @response.response.code

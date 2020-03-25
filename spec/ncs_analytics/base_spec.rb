@@ -1,18 +1,26 @@
-require 'json'
 require 'spec_helper'
 
 describe NcsAnalytics::Base do
-  subject { described_class.new(NcsAnalytics.configuration.to_h) }
+  let(:validation_hash) do
+    {
+      Name: :string,
+      Quantity: :numeric
+    }
+  end
+
+  subject { described_class.new(:items, validation_hash, NcsAnalytics.configuration.to_h) } # rubocop:disable RSpec/LeadingSubject
 
   before { configure_client }
 
-  describe '#sign_in' do
-    it 'raises an MissingConfiguration exception' do
-      NcsAnalytics.configure do |config|
-        config.api_key = nil
-      end
+  describe '#sign_in', only: 'Check' do
+    context 'when no config is provided' do
+      it 'raises an MissingConfiguration exception' do
+        NcsAnalytics.configure do |config|
+          config.api_key = nil
+        end
 
-      expect { described_class.new }.to raise_error(NcsAnalytics::Errors::MissingConfiguration)
+        expect { described_class.new(:items) }.to raise_error(NcsAnalytics::Errors::MissingConfiguration)
+      end
     end
 
     it 'does not raise an exception when config is complete' do
@@ -21,28 +29,16 @@ describe NcsAnalytics::Base do
         config.uri = 'https://targeryan'
       end
 
-      expect { described_class.new }.not_to raise_error
+      expect { described_class.new(:items) }.not_to raise_error
     end
   end
 
   describe '#valid?' do
     it 'raises an InvalidPayload exception' do
-      validation_hash = {
-        Name: :string,
-        Quantity: :numeric
-      }
-      subject.send(:validate_with, validation_hash)
-
       expect { subject.send(:valid?, Quantity: 1) }.to raise_error(NcsAnalytics::Errors::InvalidPayload)
     end
 
     it 'does not raise an InvalidPayload' do
-      validation_hash = {
-        Name: :string,
-        Quantity: :numeric
-      }
-      subject.send(:validate_with, validation_hash)
-
       expect { subject.send(:valid?, Name: 'Something', Quantity: 1) }.not_to raise_error
     end
   end
@@ -57,7 +53,6 @@ describe NcsAnalytics::Base do
     it 'calls the indicated path with the setted resource' do # rubocop:disable RSpec/MultipleExpectations
       allow_any_instance_of(described_class).to receive(:request).and_return(status: 200, body: {})
 
-      subject.send(:resource, :items)
       expect { subject.get(:all) }.not_to raise_error
 
       expect(subject).to have_received(:request) # rubocop:disable RSpec/SubjectStub
@@ -74,7 +69,6 @@ describe NcsAnalytics::Base do
     it 'calls the indicated path with the setted resource' do # rubocop:disable RSpec/MultipleExpectations
       allow_any_instance_of(described_class).to receive(:request).and_return(status: 200, body: {})
 
-      subject.send(:resource, :items)
       expect { subject.post(:create, {}) }.not_to raise_error
 
       expect(subject).to have_received(:request) # rubocop:disable RSpec/SubjectStub
@@ -98,7 +92,6 @@ describe NcsAnalytics::Base do
           .with(headers: { 'Content-Type': 'application/json' })
           .to_return(status: 400, body: '{}')
 
-        subject.send(:resource, :items)
         expect { subject.send(:request, :all) }.to raise_error(NcsAnalytics::Errors::BadRequest)
       end
     end
@@ -109,7 +102,6 @@ describe NcsAnalytics::Base do
           .with(headers: { 'Content-Type': 'application/json' })
           .to_return(status: 401, body: '{}')
 
-        subject.send(:resource, :items)
         expect { subject.send(:request, :all) }.to raise_error(NcsAnalytics::Errors::Unauthorized)
       end
     end
@@ -120,7 +112,6 @@ describe NcsAnalytics::Base do
           .with(headers: { 'Content-Type': 'application/json' })
           .to_return(status: 403, body: '{}')
 
-        subject.send(:resource, :items)
         expect { subject.send(:request, :all) }.to raise_error(NcsAnalytics::Errors::Forbidden)
       end
     end
@@ -131,7 +122,6 @@ describe NcsAnalytics::Base do
           .with(headers: { 'Content-Type': 'application/json' })
           .to_return(status: 404, body: '{}')
 
-        subject.send(:resource, :items)
         expect { subject.send(:request, :else) }.to raise_error(NcsAnalytics::Errors::NotFound)
       end
     end
@@ -142,7 +132,6 @@ describe NcsAnalytics::Base do
           .with(headers: { 'Content-Type': 'application/json' })
           .to_return(status: 429, body: '{}')
 
-        subject.send(:resource, :items)
         expect { subject.send(:request, :all) }.to raise_error(NcsAnalytics::Errors::TooManyRequests)
       end
     end
@@ -153,7 +142,6 @@ describe NcsAnalytics::Base do
           .with(headers: { 'Content-Type': 'application/json' })
           .to_return(status: 500, body: '{}')
 
-        subject.send(:resource, :items)
         expect { subject.send(:request, :all) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
@@ -163,7 +151,6 @@ describe NcsAnalytics::Base do
         .with(headers: { 'Content-Type': 'application/json' })
         .to_return(status: 201, body: '{ Id: 1, Name: "CannAPI" }')
 
-      subject.send(:resource, :items)
       expect { subject.send(:request, :create, :post, { Name: 'CannAPI' }) }.not_to raise_error
     end
   end
