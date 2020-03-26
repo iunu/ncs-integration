@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe NcsAnalytics::Base do
-  subject { described_class.new(:items, NcsAnalytics.configuration.to_h) } # rubocop:disable RSpec/LeadingSubject
+  subject { described_class.new(:items, NcsAnalytics.configuration.to_h) }
 
   before { configure_client }
 

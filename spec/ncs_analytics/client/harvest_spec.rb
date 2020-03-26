@@ -5,22 +5,6 @@ describe NcsAnalytics::Harvest do
 
   before { configure_client }
 
-  let(:expected_validation_hash) do
-    {
-      Id: :integer,
-      Name: :string,
-      HarvestType: :string,
-      DryingRoomId: :numeric,
-      DryingRoomName: :string,
-      UnitOfWeightName: :string,
-      IsOnHold: :boolean,
-      HarvestStartDate: :string,
-      FinishedDate: :string,
-      ArchivedDate: :string,
-      LastModified: :string
-    }
-  end
-
   it 'has a resource' do
     expect(subject.resource).to eq(:harvests)
   end

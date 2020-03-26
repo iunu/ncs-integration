@@ -15,7 +15,7 @@ module NcsAnalytics
                 :uri,
                 :resource
 
-    def initialize(resource = nil, opts = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def initialize(resource = nil, opts = {}) # rubocop:disable Metrics/AbcSize
       @resource = resource || "#{self.class.name.split('::').last.downcase}s".to_sym
       @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
       @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
@@ -63,17 +63,17 @@ module NcsAnalytics
     def raise_request_errors # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return if @response.success?
 
-      raise Errors::BadRequest, "An error has occurred while executing your request. #{Errors.parse_request_errors(response: @response)}" if @response.bad_request? # rubocop:disable Layout/LineLength
+      raise Errors::BadRequest, "An error has occurred while executing your request. #{Errors.parse_request_errors(response: @response)}" if @response.bad_request?
 
       raise Errors::Unauthorized, 'Invalid or no authentication provided.' if @response.unauthorized?
 
-      raise Errors::Forbidden, 'The authenticated user does not have access to the requested resource.' if @response.forbidden? # rubocop:disable Layout/LineLength
+      raise Errors::Forbidden, 'The authenticated user does not have access to the requested resource.' if @response.forbidden?
 
-      raise Errors::NotFound, 'The requested resource could not be found (incorrect or invalid URI).' if @response.not_found? # rubocop:disable Layout/LineLength
+      raise Errors::NotFound, 'The requested resource could not be found (incorrect or invalid URI).' if @response.not_found?
 
-      raise Errors::TooManyRequests, 'The limit of API calls allowed has been exceeded. Please pace the usage rate of the API more apart.' if @response.too_many_requests? # rubocop:disable Layout/LineLength
+      raise Errors::TooManyRequests, 'The limit of API calls allowed has been exceeded. Please pace the usage rate of the API more apart.' if @response.too_many_requests?
 
-      raise Errors::InternalServerError, 'An error has occurred while executing your request.' if @response.server_error? # rubocop:disable Layout/LineLength
+      raise Errors::InternalServerError, 'An error has occurred while executing your request.' if @response.server_error?
     end
   end
 end

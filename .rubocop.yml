@@ -3,7 +3,7 @@ require:
   - rubocop-rspec
 
 Layout/LineLength:
-  Max: 120
+  Max: 1000
 
 Metrics/MethodLength:
   Max: 20
