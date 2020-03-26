@@ -28,4 +28,8 @@ describe NcsAnalytics::Client do
   describe '#room' do
     it { expect(subject.room).to be_a(NcsAnalytics::Room) }
   end
+
+  describe '#sale' do
+    it { expect(subject.sale).to be_a(NcsAnalytics::Sale) }
+  end
 end
