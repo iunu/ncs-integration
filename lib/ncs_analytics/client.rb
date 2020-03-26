@@ -1,5 +1,6 @@
 require 'ncs_analytics/client/harvest'
 require 'ncs_analytics/client/item'
+require 'ncs_analytics/client/package'
 
 module NcsAnalytics
   class Client
@@ -9,6 +10,10 @@ module NcsAnalytics
 
     def item
       @item ||= NcsAnalytics::Item.new
+    end
+
+    def package
+      @package ||= NcsAnalytics::Package.new
     end
   end
 end

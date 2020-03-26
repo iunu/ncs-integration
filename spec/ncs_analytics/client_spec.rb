@@ -12,8 +12,14 @@ describe NcsAnalytics::Client do
   end
 
   describe '#item' do
-    it 'is an instance of NcsAnalytics::item' do
+    it 'is an instance of NcsAnalytics::Item' do
       expect(subject.item).to be_a(NcsAnalytics::Item)
+    end
+  end
+
+  describe '#package' do
+    it 'is an instance of NcsAnalytics::Package' do
+      expect(subject.package).to be_a(NcsAnalytics::Package)
     end
   end
 end
