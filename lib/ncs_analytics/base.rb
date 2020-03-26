@@ -5,6 +5,8 @@ require 'ncs_analytics/errors'
 
 module NcsAnalytics
   class Base
+    RESOURCE_NAME = nil
+
     include HTTParty
 
     headers 'content-type': 'application/json'
@@ -15,8 +17,8 @@ module NcsAnalytics
                 :uri,
                 :resource
 
-    def initialize(resource = nil, opts = {}) # rubocop:disable Metrics/AbcSize
-      @resource = resource || "#{self.class.name.split('::').last.downcase}s".to_sym
+    def initialize(opts = {}) # rubocop:disable Metrics/AbcSize
+      @resource = self.class::RESOURCE_NAME || "#{self.class.name.split('::').last.downcase}s".to_sym
       @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
       @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
       @uri      = opts[:uri] || NcsAnalytics.configuration.uri

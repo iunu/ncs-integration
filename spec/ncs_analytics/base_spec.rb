@@ -1,9 +1,12 @@
 require 'spec_helper'
 
 describe NcsAnalytics::Base do
-  subject { described_class.new(:items, NcsAnalytics.configuration.to_h) }
+  subject { described_class.new(NcsAnalytics.configuration.to_h) }
 
-  before { configure_client }
+  before do
+    stub_const('NcsAnalytics::Base::RESOURCE_NAME', :items)
+    configure_client
+  end
 
   describe '#sign_in', only: 'Check' do
     context 'when no config is provided' do
@@ -12,7 +15,9 @@ describe NcsAnalytics::Base do
           config.api_key = nil
         end
 
-        expect { described_class.new(:items) }.to raise_error(NcsAnalytics::Errors::MissingConfiguration)
+        stub_const('NcsAnalytics::Base::RESOURCE_NAME', :items)
+
+        expect { described_class.new }.to raise_error(NcsAnalytics::Errors::MissingConfiguration)
       end
     end
 
@@ -22,7 +27,7 @@ describe NcsAnalytics::Base do
         config.uri = 'https://targeryan'
       end
 
-      expect { described_class.new(:items) }.not_to raise_error
+      expect { described_class.new }.not_to raise_error
     end
   end
 
