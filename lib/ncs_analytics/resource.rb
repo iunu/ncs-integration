@@ -1,4 +1,5 @@
 require 'json'
+require 'logger'
 require 'httparty'
 
 require 'ncs_analytics/errors'
@@ -10,6 +11,7 @@ module NcsAnalytics
     include HTTParty
 
     headers 'content-type': 'application/json'
+    logger ::Logger.new STDOUT
 
     attr_reader :debug,
                 :response,
@@ -26,7 +28,7 @@ module NcsAnalytics
       sign_in
 
       self.class.base_uri @uri
-      self.class.headers Authorization: @api_key
+      self.class.headers Authorization: "Bearer #{@api_key}"
     end
 
     def get(resource_id)
@@ -47,8 +49,8 @@ module NcsAnalytics
       NcsAnalytics.configuration
     end
 
-    def request(path = '', verb = :get, payload = '')
-      puts "[#{verb.uppercase}] #{@resource}: #{path}" if @debug
+    def request(path = '', verb = :get, payload = '') # rubocop:disable Metrics/AbcSize
+      puts "[#{verb.to_s.upcase}] /pos/#{@resource}/v1/#{path}" if @debug
 
       @response = self.class.send(verb, "/pos/#{@resource}/v1/#{path}", body: payload)
 
@@ -59,7 +61,7 @@ module NcsAnalytics
       end
 
       raise_request_errors
-      @response.body
+      JSON.parse(@response.body)
     end
 
     def raise_request_errors # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
