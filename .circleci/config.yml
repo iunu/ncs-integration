@@ -3,9 +3,10 @@ orbs:
   ruby: circleci/ruby@0.1.2
 
 jobs:
-  build:
+  lint:
     docker:
       - image: circleci/ruby:2.6.5-stretch
+
     steps:
       - checkout
 
@@ -30,8 +31,33 @@ jobs:
 
       - run:
           name: Lint
-          command: |
-            bundle exec rubocop
+          command: bundle exec rubocop
+
+  unit_tests:
+    docker:
+      - image: circleci/ruby:2.6.5-stretch
+
+    steps:
+      - checkout
+
+      - run:
+          name: Bundler install
+          command: gem install bundler:2.1.4
+
+      - restore_cache:
+          keys:
+            - ncs-analytics-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - ncs-analytics-bundle-v2-
+
+      - run:
+          name: Bundle Install
+          command: bundle check --path vendor/bundle || bundle install --deployment
+
+      # Store bundle cache
+      - save_cache:
+          key: ncs-analytics-bundle-v2-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
 
       - run:
           name: Run rspec
@@ -42,3 +68,9 @@ jobs:
       # Save test results for timing analysis
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test_results
+
+workflows:
+  version: 2
+  run_tests:
+    - lint
+    - unit_tests
