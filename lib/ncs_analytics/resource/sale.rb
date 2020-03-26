@@ -1,5 +1,5 @@
 module NcsAnalytics
-  class Sale < NcsAnalytics::Base
+  class Sale < NcsAnalytics::Resource
     def all
       get(:receipts)
     end

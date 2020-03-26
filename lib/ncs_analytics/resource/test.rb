@@ -1,5 +1,5 @@
 module NcsAnalytics
-  class Test < NcsAnalytics::Base
+  class Test < NcsAnalytics::Resource
     def anon
       get(:anon)
     end

@@ -1,13 +1,13 @@
-require 'ncs_analytics/client/harvest'
-require 'ncs_analytics/client/item'
-require 'ncs_analytics/client/package'
-require 'ncs_analytics/client/plant_batch'
-require 'ncs_analytics/client/plant'
-require 'ncs_analytics/client/room'
-require 'ncs_analytics/client/sale'
-require 'ncs_analytics/client/strain'
-require 'ncs_analytics/client/transfer'
-require 'ncs_analytics/client/test'
+require 'ncs_analytics/resource/harvest'
+require 'ncs_analytics/resource/item'
+require 'ncs_analytics/resource/package'
+require 'ncs_analytics/resource/plant_batch'
+require 'ncs_analytics/resource/plant'
+require 'ncs_analytics/resource/room'
+require 'ncs_analytics/resource/sale'
+require 'ncs_analytics/resource/strain'
+require 'ncs_analytics/resource/transfer'
+require 'ncs_analytics/resource/test'
 
 module NcsAnalytics
   class Client

@@ -1,57 +1,57 @@
 module NcsAnalytics
-  class Plant < NcsAnalytics::Base
-    def all
-      by_state(:all)
+  class Package < NcsAnalytics::Resource
+    def active
+      by_state(:active)
     end
 
-    def find(id = nil)
-      raise Errors::BadRequest, 'A plant ID is required' unless id
-
-      get(id)
+    def inactive
+      by_state(:inactive)
     end
 
-    def vegetative
-      by_state(:vegetative)
-    end
-
-    def flowering
-      by_state(:flowering)
+    def onhold
+      by_state(:onhold)
     end
 
     def create(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
+      post(:create, payload)
+    end
+
+    def create_plantings(payload)
+      # TODO: Validate the payload
+      payload = [payload] unless payload.is_a?(Array)
       post('create/plantings', payload)
     end
 
-    def destroy(payload)
+    def change_item(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:destroyplants, payload)
+      post('change/item', payload)
     end
 
-    def change_growth_phases(payload)
+    def remediate(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:changegrowthphases, payload)
+      post(:remediate, payload)
     end
 
-    def move(payload)
+    def adjust(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:moveplants, payload)
+      post(:adjust, payload)
     end
 
-    def manicure(payload)
+    def finish(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:manicureplants, payload)
+      post(:finish, payload)
     end
 
-    def harvest(payload)
+    def unfinish(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:harvestplants, payload)
+      post(:unfinish, payload)
     end
 
     private

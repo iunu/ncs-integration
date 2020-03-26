@@ -1,5 +1,5 @@
 module NcsAnalytics
-  class Item < NcsAnalytics::Base
+  class Item < NcsAnalytics::Resource
     def all
       get(:all)
     end

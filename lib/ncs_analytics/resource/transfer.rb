@@ -1,5 +1,5 @@
 module NcsAnalytics
-  class Transfer < NcsAnalytics::Base
+  class Transfer < NcsAnalytics::Resource
     def all_incoming
       get_by_state(:incoming)
     end

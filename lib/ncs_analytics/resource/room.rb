@@ -1,5 +1,5 @@
 module NcsAnalytics
-  class Strain < NcsAnalytics::Base
+  class Room < NcsAnalytics::Resource
     def all
       get(:all)
     end

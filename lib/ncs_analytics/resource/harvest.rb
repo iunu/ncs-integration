@@ -1,13 +1,5 @@
 module NcsAnalytics
-  class PlantBatch < NcsAnalytics::Base
-    RESOURCE_NAME = "#{name.split('::').last.downcase}es".to_sym
-
-    def find(id = nil)
-      raise Errors::BadRequest, 'A plant ID is required' unless id
-
-      get("plantid/#{id}")
-    end
-
+  class Harvest < NcsAnalytics::Resource
     def active
       by_state(:active)
     end
@@ -16,28 +8,44 @@ module NcsAnalytics
       by_state(:inactive)
     end
 
+    def onhold
+      by_state(:onhold)
+    end
+
     def create(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:createplantings, payload)
+      post(:create, payload)
     end
 
-    def create_packages(payload)
+    def create_package(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
       post(:createpackages, payload)
     end
 
-    def destroy(payload)
+    def update(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:destroy, payload)
+      post(:update, payload)
     end
 
-    def change_growth_phase(payload)
+    def finish(payload)
       # TODO: Validate the payload
       payload = [payload] unless payload.is_a?(Array)
-      post(:changegrowthphase, payload)
+      post(:finish, payload)
+    end
+
+    def unfinish(payload)
+      # TODO: Validate the payload
+      payload = [payload] unless payload.is_a?(Array)
+      post(:unfinish, payload)
+    end
+
+    def remove_waste(payload)
+      # TODO: Validate the payload
+      payload = [payload] unless payload.is_a?(Array)
+      post(:removewaste, payload)
     end
 
     private

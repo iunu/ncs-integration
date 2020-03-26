@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe NcsAnalytics::Base do
+describe NcsAnalytics::Resource do
   subject { described_class.new(NcsAnalytics.configuration.to_h) }
 
   before do
-    stub_const('NcsAnalytics::Base::RESOURCE_NAME', :items)
+    stub_const('NcsAnalytics::Resource::RESOURCE_NAME', :items)
     configure_client
   end
 
@@ -15,7 +15,7 @@ describe NcsAnalytics::Base do
           config.api_key = nil
         end
 
-        stub_const('NcsAnalytics::Base::RESOURCE_NAME', :items)
+        stub_const('NcsAnalytics::Resource::RESOURCE_NAME', :items)
 
         expect { described_class.new }.to raise_error(NcsAnalytics::Errors::MissingConfiguration)
       end

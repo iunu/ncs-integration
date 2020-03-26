@@ -4,7 +4,7 @@ require 'httparty'
 require 'ncs_analytics/errors'
 
 module NcsAnalytics
-  class Base
+  class Resource
     RESOURCE_NAME = nil
 
     include HTTParty
