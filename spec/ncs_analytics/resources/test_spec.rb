@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NcsAnalytics::Test do
+describe NcsAnalytics::Resources::Test do
   subject { described_class.new }
 
   before { configure_client }

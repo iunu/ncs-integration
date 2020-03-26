@@ -7,7 +7,7 @@ module ConfigurationHelper
       uri: ENV['NCS_TEST_API_URI']
     }.freeze
 
-    credentials = YAML.load_file('./spec/test_credentials.yml').transform_keys(&:to_sym) if File.file?('./spec/test_credentials.yml') # rubocop:disable Layout/LineLength
+    credentials = YAML.load_file('./spec/test_credentials.yml').transform_keys(&:to_sym) if File.file?('./spec/test_credentials.yml')
 
     NcsAnalytics.configure do |config|
       config.uri   = credentials.fetch(:uri)

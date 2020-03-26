@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NcsAnalytics::Transfer do
+describe NcsAnalytics::Resources::Transfer do
   subject { described_class.new }
 
   before { configure_client }
