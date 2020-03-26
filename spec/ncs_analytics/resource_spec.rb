@@ -121,7 +121,7 @@ describe NcsAnalytics::Resource do
     it 'returns the body' do
       stub_request(:post, 'https://vendortest-posapi.ncsanalytics.com/pos/items/v1/create')
         .with(headers: { 'Content-Type': 'application/json' })
-        .to_return(status: 201, body: '{ Id: 1, Name: "CannAPI" }')
+        .to_return(status: 201, body: '{ "Id": 1, "Name": "CannAPI" }')
 
       expect { subject.send(:request, :create, :post, { Name: 'CannAPI' }) }.not_to raise_error
     end
