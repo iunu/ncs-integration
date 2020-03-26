@@ -29,7 +29,12 @@ jobs:
             - vendor/bundle
 
       - run:
-          name: Run rspec in parallel
+          name: Lint
+          command: |
+            bundle exec rubocop
+
+      - run:
+          name: Run rspec
           command: |
             bundle exec rspec --out test_results/rspec.xml \
                               --format progress
