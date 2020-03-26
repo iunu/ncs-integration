@@ -133,3 +133,6 @@ RSpec/ExampleLength:
 
 RSpec/AnyInstance:
   Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 5

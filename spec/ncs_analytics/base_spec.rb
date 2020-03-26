@@ -1,14 +1,7 @@
 require 'spec_helper'
 
 describe NcsAnalytics::Base do
-  let(:validation_hash) do
-    {
-      Name: :string,
-      Quantity: :numeric
-    }
-  end
-
-  subject { described_class.new(:items, validation_hash, NcsAnalytics.configuration.to_h) } # rubocop:disable RSpec/LeadingSubject
+  subject { described_class.new(:items, NcsAnalytics.configuration.to_h) } # rubocop:disable RSpec/LeadingSubject
 
   before { configure_client }
 
@@ -33,16 +26,6 @@ describe NcsAnalytics::Base do
     end
   end
 
-  describe '#valid?' do
-    it 'raises an InvalidPayload exception' do
-      expect { subject.send(:valid?, Quantity: 1) }.to raise_error(NcsAnalytics::Errors::InvalidPayload)
-    end
-
-    it 'does not raise an InvalidPayload' do
-      expect { subject.send(:valid?, Name: 'Something', Quantity: 1) }.not_to raise_error
-    end
-  end
-
   describe '#get' do
     before do
       stub_request(:get, 'https://vendortest-posapi.ncsanalytics.com/pos/items/v1/all')
@@ -50,7 +33,7 @@ describe NcsAnalytics::Base do
         .to_return(body: '{}')
     end
 
-    it 'calls the indicated path with the setted resource' do # rubocop:disable RSpec/MultipleExpectations
+    it 'calls the indicated path with the setted resource' do
       expect_any_instance_of(described_class).to receive(:request).at_least(:once).with(:all).and_return(status: 200, body: {})
       expect { subject.get(:all) }.not_to raise_error
     end
@@ -63,7 +46,7 @@ describe NcsAnalytics::Base do
         .to_return(body: '{}')
     end
 
-    it 'calls the indicated path with the setted resource' do # rubocop:disable RSpec/MultipleExpectations
+    it 'calls the indicated path with the setted resource' do
       expect_any_instance_of(described_class).to receive(:request).at_least(:once).with(:create, :post, '{}').and_return(status: 200, body: {})
       expect { subject.post(:create, {}) }.not_to raise_error
     end

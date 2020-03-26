@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
 
   # Runtime dependencies
   spec.add_dependency 'bundler'
-  spec.add_dependency 'hash_validator'
   spec.add_dependency 'httparty'
 
   # Development dependencies

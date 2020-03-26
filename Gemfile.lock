@@ -3,7 +3,6 @@ PATH
   specs:
     ncs_analytics (0.1.0)
       bundler
-      hash_validator
       httparty
 
 GEM
@@ -38,7 +37,6 @@ GEM
     guard-rubocop (1.3.0)
       guard (~> 2.0)
       rubocop (~> 0.20)
-    hash_validator (1.0.0)
     hashdiff (1.0.1)
     httparty (0.18.0)
       mime-types (~> 3.0)

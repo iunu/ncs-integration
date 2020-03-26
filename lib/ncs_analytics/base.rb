@@ -1,6 +1,5 @@
 require 'json'
 require 'httparty'
-require 'hash_validator'
 
 require 'ncs_analytics/errors'
 
@@ -8,7 +7,6 @@ module NcsAnalytics
   class Base
     include HTTParty
 
-    SCHEMA = {}
     headers 'content-type': 'application/json'
 
     attr_reader :debug,
@@ -17,7 +15,7 @@ module NcsAnalytics
                 :uri,
                 :resource
 
-    def initialize(resource = nil, validation_hash = nil, opts = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    def initialize(resource = nil, opts = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       @resource = resource || "#{self.class.name.split('::').last.downcase}s".to_sym
       @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
       @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
@@ -25,7 +23,6 @@ module NcsAnalytics
 
       sign_in
 
-      @validation_hash = validation_hash || self.class::SCHEMA || {}
       self.class.base_uri @uri
       self.class.headers Authorization: @api_key
     end
@@ -38,18 +35,6 @@ module NcsAnalytics
       request(resource_id, :post, body.to_json)
     end
 
-    protected
-
-    def valid?(payload)
-      if payload.is_a?(Array)
-        payload.each {|data| validate(data) }
-      else
-        validate(payload)
-      end
-
-      true
-    end
-
     private
 
     def sign_in
@@ -58,12 +43,6 @@ module NcsAnalytics
 
     def configuration
       NcsAnalytics.configuration
-    end
-
-    def validate(payload)
-      validator = HashValidator.validate(payload, @validation_hash)
-      p validator.errors
-      raise Errors::InvalidPayload, "Invalid payload provided: #{validator.errors}" unless validator.valid?
     end
 
     def request(path = '', verb = :get, payload = '')
