@@ -28,4 +28,10 @@ describe NcsAnalytics::Client do
       expect(subject.plant_batch).to be_a(NcsAnalytics::PlantBatch)
     end
   end
+
+  describe '#plant' do
+    it 'is an instance of NcsAnalytics::Package' do
+      expect(subject.plant).to be_a(NcsAnalytics::Plant)
+    end
+  end
 end
