@@ -29,6 +29,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Bundler install
+          command: gem install bundler:2.1.4
+      - run:
           name: Install Rubocop
           command: sudo gem install rubocop:0.49.1
       - run:
