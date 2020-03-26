@@ -46,43 +46,30 @@ describe NcsAnalytics::Harvest do
   end
 
   describe '#create' do
+    let(:payload) do
+      {
+        Name: 'Harvest Room-1',
+        HarvestType: 'Product',
+        DryingRoomId: 1,
+        DryingRoomName: 'Harvest Room',
+        UnitOfWeightName: 'Ounces',
+        IsOnHold: false,
+        HarvestStartDate: '2014-11-19',
+        FinishedDate: nil,
+        ArchivedDate: nil,
+        LastModified: nil
+      }
+    end
+
     context 'with an array payload' do
       it 'sends the complete payload' do
-        payload = [
-          {
-            Name: 'Harvest Room-1',
-            HarvestType: 'Product',
-            DryingRoomId: 1,
-            DryingRoomName: 'Harvest Room',
-            UnitOfWeightName: 'Ounces',
-            IsOnHold: false,
-            HarvestStartDate: '2014-11-19',
-            FinishedDate: nil,
-            ArchivedDate: nil,
-            LastModified: nil
-          }
-        ]
-
-        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:create, payload).and_return(status: 200, body: {})
-        subject.create(payload)
+        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:create, [payload]).and_return(status: 200, body: {})
+        subject.create([payload])
       end
     end
 
     context 'with a hash payload' do
       it 'sends the complete payload' do
-        payload = {
-          Name: 'Harvest Room-1',
-          HarvestType: 'Product',
-          DryingRoomId: 1,
-          DryingRoomName: 'Harvest Room',
-          UnitOfWeightName: 'Ounces',
-          IsOnHold: false,
-          HarvestStartDate: '2014-11-19',
-          FinishedDate: nil,
-          ArchivedDate: nil,
-          LastModified: nil
-        }
-
         expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:create, [payload]).and_return(status: 200, body: {})
         subject.create(payload)
       end
@@ -96,68 +83,39 @@ describe NcsAnalytics::Harvest do
       end
 
       it 'raises the exceeption' do
-        payload = {
-          Name: 'Harvest Room-1',
-          HarvestType: 'Product',
-          DryingRoomId: 1,
-          DryingRoomName: 'Harvest Room',
-          UnitOfWeightName: 'Ounces',
-          IsOnHold: false,
-          HarvestStartDate: '2014-11-19',
-          FinishedDate: nil,
-          ArchivedDate: nil,
-          LastModified: nil
-        }
-
         expect { subject.create(payload) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
   end
 
   describe '#create_package' do
+    let(:payload) do
+      {
+        HarvestId: 2,
+        Label: 'ABCDEFGHIJK77646645333',
+        RoomName: nil,
+        ProductName: 'Buds',
+        Weight: 5,
+        UnitOfMeasureName: 'Grams',
+        IsProductionBatch: true,
+        ProductionBatchNumber: nil,
+        ProductRequiresRemediation: true,
+        RemediationMethodId: nil,
+        RemediationDate: '2018-06-05',
+        RemediationSteps: nil,
+        PackagedDate: '2018-05-15'
+      }
+    end
+
     context 'with an array payload' do
       it 'sends the complete payload' do
-        payload = [
-          {
-            HarvestId: 2,
-            Label: 'ABCDEFGHIJK77646645333',
-            RoomName: nil,
-            ProductName: 'Buds',
-            Weight: 5,
-            UnitOfMeasureName: 'Grams',
-            IsProductionBatch: true,
-            ProductionBatchNumber: nil,
-            ProductRequiresRemediation: true,
-            RemediationMethodId: nil,
-            RemediationDate: '2018-06-05',
-            RemediationSteps: nil,
-            PackagedDate: '2018-05-15'
-          }
-        ]
-
-        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:createpackages, payload).and_return(status: 200, body: {})
-        subject.create_package(payload)
+        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:createpackages, [payload]).and_return(status: 200, body: {})
+        subject.create_package([payload])
       end
     end
 
     context 'with a hash payload' do
       it 'sends the complete payload' do
-        payload = {
-          HarvestId: 2,
-          Label: 'ABCDEFGHIJK77646645333',
-          RoomName: nil,
-          ProductName: 'Buds',
-          Weight: 5,
-          UnitOfMeasureName: 'Grams',
-          IsProductionBatch: true,
-          ProductionBatchNumber: nil,
-          ProductRequiresRemediation: true,
-          RemediationMethodId: nil,
-          RemediationDate: '2018-06-05',
-          RemediationSteps: nil,
-          PackagedDate: '2018-05-15'
-        }
-
         expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:createpackages, [payload]).and_return(status: 200, body: {})
         subject.create_package(payload)
       end
@@ -171,65 +129,36 @@ describe NcsAnalytics::Harvest do
       end
 
       it 'raises the exceeption' do
-        payload = {
-          HarvestId: 2,
-          Label: 'ABCDEFGHIJK77646645333',
-          RoomName: nil,
-          ProductName: 'Buds',
-          Weight: 5,
-          UnitOfMeasureName: 'Grams',
-          IsProductionBatch: true,
-          ProductionBatchNumber: nil,
-          ProductRequiresRemediation: true,
-          RemediationMethodId: nil,
-          RemediationDate: '2018-06-05',
-          RemediationSteps: nil,
-          PackagedDate: '2018-05-15'
-        }
-
         expect { subject.create_package(payload) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
   end
 
   describe '#update' do
+    let(:payload) do
+      {
+        Name: 'Harvest Room-1',
+        HarvestType: 'Product',
+        DryingRoomId: 1,
+        DryingRoomName: 'Harvest Room',
+        UnitOfWeightName: 'Ounces',
+        IsOnHold: false,
+        HarvestStartDate: '2014-11-19',
+        FinishedDate: nil,
+        ArchivedDate: nil,
+        LastModified: nil
+      }
+    end
+
     context 'with an array payload' do
       it 'sends the complete payload' do
-        payload = [
-          {
-            Name: 'Harvest Room-1',
-            HarvestType: 'Product',
-            DryingRoomId: 1,
-            DryingRoomName: 'Harvest Room',
-            UnitOfWeightName: 'Ounces',
-            IsOnHold: false,
-            HarvestStartDate: '2014-11-19',
-            FinishedDate: nil,
-            ArchivedDate: nil,
-            LastModified: nil
-          }
-        ]
-
-        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:update, payload).and_return(status: 200, body: {})
-        subject.update(payload)
+        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:update, [payload]).and_return(status: 200, body: {})
+        subject.update([payload])
       end
     end
 
     context 'with a hash payload' do
       it 'sends the complete payload' do
-        payload = {
-          Name: 'Harvest Room-1',
-          HarvestType: 'Product',
-          DryingRoomId: 1,
-          DryingRoomName: 'Harvest Room',
-          UnitOfWeightName: 'Ounces',
-          IsOnHold: false,
-          HarvestStartDate: '2014-11-19',
-          FinishedDate: nil,
-          ArchivedDate: nil,
-          LastModified: nil
-        }
-
         expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:update, [payload]).and_return(status: 200, body: {})
         subject.update(payload)
       end
@@ -243,50 +172,28 @@ describe NcsAnalytics::Harvest do
       end
 
       it 'raises the exceeption' do
-        payload = {
-          Name: 'Harvest Room-1',
-          HarvestType: 'Product',
-          DryingRoomId: 1,
-          DryingRoomName: 'Harvest Room',
-          UnitOfWeightName: 'Ounces',
-          IsOnHold: false,
-          HarvestStartDate: '2014-11-19',
-          FinishedDate: nil,
-          ArchivedDate: nil,
-          LastModified: nil
-        }
-
         expect { subject.update(payload) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
   end
 
   describe '#finish' do
+    let(:payload) do
+      {
+        Id: 1,
+        FinishedDate: '2018-03-15'
+      }
+    end
+
     context 'with an array payload' do
       it 'sends the complete payload' do
-        payload = [
-          {
-            Id: 1,
-            FinishedDate: '2018-03-15'
-          },
-          {
-            Id: 2,
-            FinishedDate: '2018-04-21'
-          }
-        ]
-
-        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:finish, payload).and_return(status: 200, body: {})
-        subject.finish(payload)
+        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:finish, [payload]).and_return(status: 200, body: {})
+        subject.finish([payload])
       end
     end
 
     context 'with a hash payload' do
       it 'sends the complete payload' do
-        payload = {
-          Id: 1,
-          FinishedDate: '2018-03-15'
-        }
-
         expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:finish, [payload]).and_return(status: 200, body: {})
         subject.finish(payload)
       end
@@ -300,39 +207,27 @@ describe NcsAnalytics::Harvest do
       end
 
       it 'raises the exceeption' do
-        payload = {
-          Id: 1,
-          FinishedDate: '2018-03-15'
-        }
-
         expect { subject.finish(payload) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
   end
 
   describe '#unfinish' do
+    let(:payload) do
+      {
+        Id: 1
+      }
+    end
+
     context 'with an array payload' do
       it 'sends the complete payload' do
-        payload = [
-          {
-            Id: 1
-          },
-          {
-            Id: 2
-          }
-        ]
-
-        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:unfinish, payload).and_return(status: 200, body: {})
-        subject.unfinish(payload)
+        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:unfinish, [payload]).and_return(status: 200, body: {})
+        subject.unfinish([payload])
       end
     end
 
     context 'with a hash payload' do
       it 'sends the complete payload' do
-        payload = {
-          Id: 1
-        }
-
         expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:unfinish, [payload]).and_return(status: 200, body: {})
         subject.unfinish(payload)
       end
@@ -346,47 +241,30 @@ describe NcsAnalytics::Harvest do
       end
 
       it 'raises the exceeption' do
-        payload = {
-          Id: 1
-        }
-
         expect { subject.unfinish(payload) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
   end
 
   describe '#remove_waste' do
+    let(:payload) do
+      {
+        Id: 1,
+        UnitOfWeightName: 'Grams',
+        TotalWasteWeight: 15.85,
+        FinishedDate: '2018-01-17'
+      }
+    end
+
     context 'with an array payload' do
       it 'sends the complete payload' do
-        payload = [
-          {
-            Id: 1,
-            UnitOfWeightName: 'Grams',
-            TotalWasteWeight: 15.85,
-            FinishedDate: '2018-01-17'
-          },
-          {
-            Id: 2,
-            UnitOfWeightName: 'Onces',
-            TotalWasteWeight: 9.6,
-            FinishedDate: '2018-04-19'
-          }
-        ]
-
-        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:removewaste, payload).and_return(status: 200, body: {})
-        subject.remove_waste(payload)
+        expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:removewaste, [payload]).and_return(status: 200, body: {})
+        subject.remove_waste([payload])
       end
     end
 
     context 'with a hash payload' do
       it 'sends the complete payload' do
-        payload = {
-          Id: 1,
-          UnitOfWeightName: 'Grams',
-          TotalWasteWeight: 15.85,
-          FinishedDate: '2018-01-17'
-        }
-
         expect_any_instance_of(described_class).to receive(:post).at_least(:once).with(:removewaste, [payload]).and_return(status: 200, body: {})
         subject.remove_waste(payload)
       end
@@ -400,13 +278,6 @@ describe NcsAnalytics::Harvest do
       end
 
       it 'raises the exceeption' do
-        payload = {
-          Id: 1,
-          UnitOfWeightName: 'Grams',
-          TotalWasteWeight: 15.85,
-          FinishedDate: '2018-01-17'
-        }
-
         expect { subject.remove_waste(payload) }.to raise_error(NcsAnalytics::Errors::InternalServerError)
       end
     end
