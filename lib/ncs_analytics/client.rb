@@ -3,6 +3,7 @@ require 'ncs_analytics/client/item'
 require 'ncs_analytics/client/package'
 require 'ncs_analytics/client/plant_batch'
 require 'ncs_analytics/client/plant'
+require 'ncs_analytics/client/room'
 
 module NcsAnalytics
   class Client
@@ -24,6 +25,10 @@ module NcsAnalytics
 
     def plant
       @plant ||= NcsAnalytics::Plant.new
+    end
+
+    def room
+      @room ||= NcsAnalytics::Room.new
     end
   end
 end

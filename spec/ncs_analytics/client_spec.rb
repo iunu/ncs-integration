@@ -6,32 +6,26 @@ describe NcsAnalytics::Client do
   before { configure_client }
 
   describe '#harvest' do
-    it 'is an instance of NcsAnalytics::Harvest' do
-      expect(subject.harvest).to be_a(NcsAnalytics::Harvest)
-    end
+    it { expect(subject.harvest).to be_a(NcsAnalytics::Harvest) }
   end
 
   describe '#item' do
-    it 'is an instance of NcsAnalytics::Item' do
-      expect(subject.item).to be_a(NcsAnalytics::Item)
-    end
+    it { expect(subject.item).to be_a(NcsAnalytics::Item) }
   end
 
   describe '#package' do
-    it 'is an instance of NcsAnalytics::Package' do
-      expect(subject.package).to be_a(NcsAnalytics::Package)
-    end
+    it { expect(subject.package).to be_a(NcsAnalytics::Package) }
   end
 
   describe '#plant_batch' do
-    it 'is an instance of NcsAnalytics::Package' do
-      expect(subject.plant_batch).to be_a(NcsAnalytics::PlantBatch)
-    end
+    it { expect(subject.plant_batch).to be_a(NcsAnalytics::PlantBatch) }
   end
 
   describe '#plant' do
-    it 'is an instance of NcsAnalytics::Package' do
-      expect(subject.plant).to be_a(NcsAnalytics::Plant)
-    end
+    it { expect(subject.plant).to be_a(NcsAnalytics::Plant) }
+  end
+
+  describe '#room' do
+    it { expect(subject.room).to be_a(NcsAnalytics::Room) }
   end
 end
