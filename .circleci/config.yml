@@ -36,7 +36,7 @@ jobs:
           command: sudo gem install rubocop:0.49.1
       - run:
           name: Lint and code styling
-          command: bundle exec rubocop
+          command: rubocop
 
   unit_tests:
     docker:
