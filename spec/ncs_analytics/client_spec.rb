@@ -36,4 +36,8 @@ describe NcsAnalytics::Client do
   describe '#strain' do
     it { expect(subject.strain).to be_a(NcsAnalytics::Strain) }
   end
+
+  describe '#transfer' do
+    it { expect(subject.transfer).to be_a(NcsAnalytics::Transfer) }
+  end
 end
