@@ -32,4 +32,8 @@ describe NcsAnalytics::Client do
   describe '#sale' do
     it { expect(subject.sale).to be_a(NcsAnalytics::Sale) }
   end
+
+  describe '#strain' do
+    it { expect(subject.strain).to be_a(NcsAnalytics::Strain) }
+  end
 end
