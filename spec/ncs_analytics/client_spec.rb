@@ -40,4 +40,8 @@ describe NcsAnalytics::Client do
   describe '#transfer' do
     it { expect(subject.transfer).to be_a(NcsAnalytics::Transfer) }
   end
+
+  describe '#test' do
+    it { expect(subject.test).to be_a(NcsAnalytics::Test) }
+  end
 end

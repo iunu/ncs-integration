@@ -7,6 +7,7 @@ require 'ncs_analytics/client/room'
 require 'ncs_analytics/client/sale'
 require 'ncs_analytics/client/strain'
 require 'ncs_analytics/client/transfer'
+require 'ncs_analytics/client/test'
 
 module NcsAnalytics
   class Client
@@ -44,6 +45,10 @@ module NcsAnalytics
 
     def transfer
       @transfer ||= NcsAnalytics::Transfer.new
+    end
+
+    def test
+      @test ||= NcsAnalytics::Test.new
     end
   end
 end
