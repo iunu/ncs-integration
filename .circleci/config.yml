@@ -41,6 +41,9 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: Bundler install
+          command: gem install bundler:2.1.4
       - restore_cache:
           keys:
             - ncs-analytics-bundle-v1-{{ checksum "Gemfile.lock" }}
@@ -60,7 +63,7 @@ workflows:
   run_tests:
     jobs:
       - build
-      - lint:
+      - rubocop:
           requires:
             - build
       - unit_tests:
