@@ -1,4 +1,4 @@
-module NCS
+module NcsAnalytics
   class Configuration
     attr_accessor :api_key,
                   :uri,

@@ -1,11 +1,9 @@
 PATH
   remote: .
   specs:
-    NCS (0.0.1)
+    ncs_analytics (0.1.0)
       bundler
       httparty
-      rake
-      rspec
 
 GEM
   remote: https://rubygems.org/
@@ -65,7 +63,6 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (4.0.3)
     rainbow (3.0.0)
-    rake (13.0.1)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -111,12 +108,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  NCS!
   ci_reporter
   guard
   guard-rspec
   guard-rubocop
+  ncs_analytics!
   pry
+  rspec
   rubocop
   rubocop-performance
   rubocop-rspec

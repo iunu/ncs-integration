@@ -1,7 +1,7 @@
-module NCS
+module NcsAnalytics
   module Errors
     class MissingConfiguration < RuntimeError; end
-    class MissingParameter < RuntimeError; end
+    class InvalidPayload < RuntimeError; end
     class RequestError < RuntimeError; end
 
     class BadRequest < RequestError; end
@@ -15,11 +15,10 @@ module NCS
     class << self
       def parse_request_errors(response:)
         body = response.parsed_response
-        if body.is_a? Array
-          consolidate_errors_by_row(body).join(', ')
-        elsif body.is_a? Hash
-          body['Message']
-        end
+
+        return consolidate_errors_by_row(body).join(', ') if body.is_a? Array
+
+        return body['Message'] if body.is_a? Hash
       end
 
       private

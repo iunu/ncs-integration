@@ -1,9 +1,18 @@
+require 'yaml'
+
 module ConfigurationHelper
   def configure_client
-    NCS.configure do |config|
-      config.api_key = $spec_credentials.fetch('api_key') # rubocop:disable Style/GlobalVars
-      config.uri = $spec_credentials.fetch('uri') # rubocop:disable Style/GlobalVars
-      config.debug = $spec_credentials.has_key?('debug') # rubocop:disable Style/GlobalVars
+    credentials = {
+      api_key: ENV['NCS_TEST_API_KEY'],
+      uri: ENV['NCS_TEST_API_URI']
+    }.freeze
+
+    credentials = YAML.load_file('./spec/test_credentials.yml').transform_keys(&:to_sym) if File.file?('./spec/test_credentials.yml')
+
+    NcsAnalytics.configure do |config|
+      config.uri   = credentials.fetch(:uri)
+      config.debug = credentials.has_key?(:debug)
+      config.api_key = credentials.fetch(:api_key)
     end
   end
 end
