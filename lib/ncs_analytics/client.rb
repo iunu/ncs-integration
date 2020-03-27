@@ -11,6 +11,14 @@ require 'ncs_analytics/resources/test'
 
 module NcsAnalytics
   class Client
+    def uri
+      NcsAnalytics.configuration.uri
+    end
+
+    def debug?
+      NcsAnalytics.configuration.debug
+    end
+
     def harvest
       @harvest ||= NcsAnalytics::Resources::Harvest.new
     end
