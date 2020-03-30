@@ -5,6 +5,15 @@ describe NcsAnalytics::Client do
 
   before { configure_client }
 
+  describe '#uri' do
+    it { expect(subject.uri).to eq('https://vendortest-posapi.ncsanalytics.com') }
+  end
+
+  describe '#debug?' do
+    # We only want to check that the value is accesible
+    it { expect(subject.debug?).to be(true).or be(false) }
+  end
+
   describe '#harvest' do
     it { expect(subject.harvest).to be_a(NcsAnalytics::Resources::Harvest) }
   end

@@ -1,6 +1,7 @@
 module NcsAnalytics
   module Errors
     class MissingConfiguration < RuntimeError; end
+    class MissingParameter < RuntimeError; end
     class InvalidPayload < RuntimeError; end
     class RequestError < RuntimeError; end
 

@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: Bundler install
-          command: gem install bundler:2.1.4
+          command: gem install bundler:2.0.2
       - restore_cache:
           key: ncs-analytics-bundle-v1-{{ checksum "Gemfile.lock" }}
 
@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run:
           name: Bundler install
-          command: gem install bundler:2.1.4
+          command: gem install bundler:2.0.2
       - run:
           name: Install any missing gems / dependencies / extensions
           command: bundle install --path vendor/bundle
@@ -46,7 +46,7 @@ jobs:
       - checkout
       - run:
           name: Bundler install
-          command: gem install bundler:2.1.4
+          command: gem install bundler:2.0.2
       - restore_cache:
           keys:
             - ncs-analytics-bundle-v1-{{ checksum "Gemfile.lock" }}
