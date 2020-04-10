@@ -1,0 +1,410 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'yaml'
+require 'ncs_analytics'
+
+class Array
+  def pluck(key)
+    map { |h| h[key] }
+  end
+end
+
+def pad(str, filler = '=')
+  p (str.upcase + ' ' + filler * 80)[0,80]
+end
+
+def separator
+  p '=' * 80
+end
+
+spec_credentials = YAML.load_file('./spec/test_credentials.yml')
+
+NcsAnalytics.configure do |config|
+  config.api_key = spec_credentials.fetch('api_key')
+  config.uri     = spec_credentials.fetch('uri')
+  config.debug   = true
+end
+
+vendor_name = 'Artemis AgTech, Inc.'
+client = NcsAnalytics::Client.new
+
+# Create strain
+pad 'Strain'
+strain_name = "#{vendor_name} Strain"
+client.strain.create([
+  Name: strain_name,
+  TestingStatus: 'None',
+  ThcLevel: 0.5,
+  CbdLevel: 0.5,
+  IndicaPercentage: 50.0,
+  SativaPercentage: 75.0
+])
+
+strains = client.strain.all
+strain = strains.select { |s| s['name'] == strain_name }.first
+
+p "Strain ID: #{strain['id']}"
+separator
+
+# Create room
+pad 'Room'
+client.room.create([
+  { Name: "#{vendor_name} Room" },
+  { Name: 'Harvest Room' },
+  { Name: 'Plants Room' },
+  { Name: 'Edibles Room' }
+])
+
+rooms = client.room.all
+vendor_room = rooms.select { |s| s['name'] == "#{vendor_name} Room" }.first
+harvest_room = rooms.select { |s| s['name'] == "#{vendor_name} Room" }.first
+
+p "Vendor Room ID: #{vendor_room['id']}"
+p "Harvest Room ID: #{harvest_room['id']}"
+separator
+
+# Create item categories
+pad 'Item Categories'
+client.item.create_categories([
+  {
+    Name: 'Buds',
+    ProductCategoryType: 'Buds',
+    QuantityType: 'WeightBased',
+    RequiresStrain: true,
+    UnitQuantityMultiplier: nil,
+    UnitQuantityUnitOfMeasureName: nil,
+    RequiresUnitCbdPercent: false,
+    RequiresUnitCbdContent: false,
+    RequiresUnitThcPercent: false,
+    RequiresUnitThcContent: false,
+    RequiresUnitVolume: false,
+    RequiresUnitWeight: false,
+    RequiresServingSize: false,
+    RequiresSupplyDurationDays: false,
+    RequiresIngredients: false,
+    RequiresProductPhoto: false,
+    CanContainSeeds: false,
+    CanBeRemediated: false
+  },
+  {
+    Name: 'Infused',
+    ProductCategoryType: 'InfusedEdible',
+    QuantityType: 'CountBased',
+    RequiresStrain: true,
+    UnitQuantityMultiplier: nil,
+    UnitQuantityUnitOfMeasureName: nil,
+    RequiresUnitCbdPercent: false,
+    RequiresUnitCbdContent: false,
+    RequiresUnitThcPercent: false,
+    RequiresUnitThcContent: false,
+    RequiresUnitVolume: false,
+    RequiresUnitWeight: false,
+    RequiresServingSize: false,
+    RequiresSupplyDurationDays: false,
+    RequiresIngredients: false,
+    RequiresProductPhoto: false,
+    CanContainSeeds: false,
+    CanBeRemediated: false
+  }
+])
+separator
+
+# Create item
+pad 'Item'
+client.item.create([
+  {
+    Name: 'Buds',
+    ProductCategoryName: 'Buds',
+    UnitOfMeasureName: 'Grams',
+    StrainName: "#{vendor_name} Strain",
+    Intermediaries: nil.
+    IntermediaryProductUsed: false,
+    UnitCbdPercent: nil,
+    UnitCbdContent: nil,
+    UnitCbdContentUnitOfMeasureName: nil,
+    UnitThcPercent: nil,
+    UnitThcContent: nil,
+    UnitThcContentUnitOfMeasureName: nil,
+    UnitVolume: nil,
+    UnitVolumeUnitOfMeasureName: nil,
+    UnitWeight: nil,
+    UnitWeightUnitOfMeasureName: nil,
+    ServingSize: nil,
+    SupplyDurationDays: nil,
+    Ingredients: nil
+  },
+  {
+    Name: 'Tincture',
+    ProductCategoryName: 'Infused',
+    UnitOfMeasureName: 'Each',
+    StrainName: "#{vendor_name} Strain",
+    Intermediaries: [
+      {
+        Name: 'Buds Item',
+        Type: 'Buds'
+      }
+    ].
+    IntermediaryProductUsed: false,
+    UnitCbdPercent: nil,
+    UnitCbdContent: nil,
+    UnitCbdContentUnitOfMeasureName: nil,
+    UnitThcPercent: nil,
+    UnitThcContent: nil,
+    UnitThcContentUnitOfMeasureName: nil,
+    UnitVolume: nil,
+    UnitVolumeUnitOfMeasureName: nil,
+    UnitWeight: nil,
+    UnitWeightUnitOfMeasureName: nil,
+    ServingSize: nil,
+    SupplyDurationDays: nil,
+    Ingredients: nil
+  }
+])
+separator
+
+# Create plant batch
+pad 'Plant Batch'
+
+client.plant_batch.create([
+  Name: 'PlantBatch1',
+  Type: 'Clone',
+  Count: 25,
+  StrainName: strain_name,
+  RoomName: 'Plants Room',
+  PlantedDate: '2018-08-01'
+])
+
+batches = client.plant_batch.active.first
+plant_ids = client.plant.all.pluck('id')
+
+p "Batch ID: #{batches['id']}"
+p "Plant IDs: #{plant_ids.join(', ')}"
+separator
+
+# Change Growth Phases for the Plant Batch
+pad 'Change Growth Phases For Plant Batch'
+
+client.plant_batch.change_growth_phase([
+  Name: 'PlantBatch1',
+  Count: 25,
+  NewTag: nil,
+  GrowthPhase: 'Vegetative',
+  RoomName: 'Plants Room',
+  PlantedDate: '2018-08-15'
+])
+
+separator
+
+# Destroy Plants in the Plant Batch
+pad 'Destroy Plants In The Plant Batch'
+
+client.plant_batch.destroy([
+  Name: 'PlantBatch1',
+  DestroyedCount: 20,
+  DestroyedNote: 'Bugs were found',
+  DestroyedDate: '2018-08-16'
+])
+
+vegetatives = client.plant.vegetative.select { |plant| plant['destroyedDate'].nil? }.pluck('id')
+p "Plant IDs: #{vegetatives.join(', ')}"
+separator
+
+# Add tag labels to plants
+pad 'Add tag labels to plants'
+
+client.plant.change_growth_phases([
+  {
+    Id: vegetative.first,
+    Label: nil,
+    NewTag: 'ABC001',
+    GrowthPhase: 'Flowering',
+    NewRoom: 'Plants Room',
+    GrowthDate: '2018-08-17'
+  },
+  {
+    Id: vegetative[1],
+    Label: nil,
+    NewTag: 'ABC002',
+    GrowthPhase: 'Flowering',
+    NewRoom: 'Plants Room',
+    GrowthDate: '2018-08-17'
+  }
+])
+separator
+
+# Create a Harvest
+pad 'Create a Harvest'
+
+client.harvest.create([
+  Name: 'Harvest1',
+  HarvestType: 'Product',
+  DryingRoomId: harvest_room['id'],
+  DryingRoomName: 'Harvest Room',
+  UnitOfWeightName: 'Grams',
+  HarvestStartDate: '2018-08-18'
+])
+
+harvest = client.harvest.active.select { |h| h['name'] == 'Harvest1' }.first
+p "Harvest ID: #{harvest['id']}"
+separator
+
+# Harvest Plants into the new Harvest
+pad 'Harvest Plants into the new Harvest'
+
+client.plant.harvest([
+  Label: 'ABC001',
+  HarvestedWetWeight: 101.99,
+  DryingRoomId: harvest_room['id'],
+  DryingRoomName: 'Harvest Room',
+  UnitOfWeightName: 'Grams',
+  HarvestStartDate: '2018-08-19'
+])
+
+harvest = client.harvest.active.select { |h| h['name'] == 'Harvest1' }.first
+p "Harvest: #{harvest}"
+p "Harvest ID: #{harvest['id']}"
+separator
+
+# Remove waste
+pad 'Remove waste'
+
+client.harvest.remove_waste([
+  Id: harvest['id'],
+  UnitOfWeightName: 'Grams',
+  TotalWasteWeight: 10,
+  FinishedDate: nil
+])
+
+separator
+
+# Update harvest
+pad 'Update waste'
+
+client.harvest.update([
+  Id: harvest['id'],
+  DryingRoomName: 'Edibles Room'
+])
+
+separator
+
+# Package Harvest
+pad 'Package Harvest'
+
+client.harvest.create_package([
+  HarvestId: harvest['id'],
+  Label: 'ABC003',
+  RoomName: nil,
+  ProductName: 'Buds Item',
+  Weight: 78,
+  UnitOfMeasureName: 'Grams',
+  IsProductionBatch: true,
+  ProductionBatchNumber: nil,
+  ProductRequiresRemediation: false,
+  RemediationMethodId: nil,
+  RemediationDate: nil,
+  RemediationSteps: nil,
+  PackagedDate: '2018-08-20'
+])
+
+package = client.package.active.first
+p "Package ID: #{package['id']}"
+separator
+
+# Sell and Transfer Package: Sell Package
+pad 'Sell and Transfer Package: Sell Package'
+
+client.sales.create([
+  SalesDateTime: '2018-08-21T12:00:00.000',
+  SalesCustomerType: 'Transfer',
+  Transactions: [
+    {
+      PackageLabel: 'ABC003',
+      Quantity: 10.0,
+      UnitOfMeasure: 'Grams',
+      TotalAmount: 110.00
+    }
+  ]
+])
+
+separator
+
+# Sell and Transfer Package: Transfer Package out
+pad 'Sell and Transfer Package: Transfer Package out'
+
+client.transfer.create_outgoing([
+  ManifestNumber: 'Man001',
+  ShipperFacilityLicenseNumber: 'XYZ-987',
+  ShipperFacilityName: 'Seller Company',
+  TransporterFacilityLicenseNumber: 'XYZ-654',
+  TransporterFacilityName: 'Transfer Company',
+  DriverName: 'B Smith',
+  DriverVehicleLicenseNumber: 'CADL 123',
+  VehicleMake: 'Ford',
+  VehicleModel: 'Escape',
+  VehicleLicensePlateNumber: 'CA 123',
+  DeliveryCount: 0,
+  ReceivedDeliveryCount: 0,
+  PackageCount: 1,
+  ReceivedPackageCount: 1,
+  CreatedDateTime: '2018-08-24T12:01:00.000',
+  DeliveryId: 0,
+  RecipientFacilityLicenseNumber: 'XYZ-321',
+  RecipientFacilityName: 'Receive Company',
+  ShipmentTypeName: 'Transfer',
+  ShipmentTransactionType: 'Standard',
+  EstimatedDepartureDateTime: '2018-08-25T12:00:00.000',
+  ActualDepartureDateTime: nil,
+  EstimatedArrivalDateTime: '2018-08-25T13:00:00.000',
+  ActualArrivalDateTime: nil,
+  DeliveryPackageCount: 1,
+  DeliveryReceivedPackageCount: 1,
+  ReceivedDateTime: nil,
+  Packages: [
+    {
+      Label: 'ABC003'
+    }
+  ]
+])
+
+separator
+
+# Sell and Transfer Package: Transfer Package in
+pad 'Sell and Transfer Package: Transfer Package out'
+
+client.transfer.create_incoming([
+  ManifestNumber: 'Man002',
+  ShipperFacilityLicenseNumber: 'ABCXYZ',
+  ShipperFacilityName: 'Cultivator1',
+  TransporterFacilityLicenseNumber: 'XYZABC',
+  TransporterFacilityName: 'Distributor1',
+  DriverName: 'B Smith',
+  DriverVehicleLicenseNumber: 'CADL 123',
+  VehicleMake: 'Ford',
+  VehicleModel: 'Escape',
+  VehicleLicensePlateNumber: 'CA 123',
+  DeliveryCount: 1,
+  ReceivedDeliveryCount: 1,
+  PackageCount: 1,
+  ReceivedPackageCount: 1,
+  CreatedDateTime: '2018-08-25T14:01:00.000',
+  DeliveryId: 0,
+  RecipientFacilityLicenseNumber: 'R-101',
+  RecipientFacilityName: 'Retailer1',
+  ShipmentTypeName: 'Transfer',
+  ShipmentTransactionType: 'Standard',
+  EstimatedDepartureDateTime: '2018-08-25T12:00:00.000',
+  ActualDepartureDateTime: '2018-08-25T11:30:00.000',
+  EstimatedArrivalDateTime: '2018-08-25T13:00:00.000',
+  ActualArrivalDateTime: '2018-08-25T13:15:00.000',
+  DeliveryPackageCount: 1,
+  DeliveryReceivedPackageCount: 1,
+  ReceivedDateTime: '2018-08-25T13:15:00.000',
+  Packages: [
+    {
+      Label: 'ABC003'
+    }
+  ]
+])
+
+separator
