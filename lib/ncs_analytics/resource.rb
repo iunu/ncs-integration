@@ -9,6 +9,7 @@ module NcsAnalytics
     RESOURCE_NAME = nil
 
     include HTTParty
+    http_proxy ENV['QUOTAGUARDSTATIC_URL']
 
     headers 'content-type': 'application/json'
     logger ::Logger.new STDOUT
