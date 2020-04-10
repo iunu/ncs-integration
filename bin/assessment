@@ -58,7 +58,7 @@ client.room.create([
 
 rooms = client.room.all
 vendor_room = rooms.select { |s| s['name'] == "#{vendor_name} Room" }.first
-harvest_room = rooms.select { |s| s['name'] == "#{vendor_name} Room" }.first
+harvest_room = rooms.select { |s| s['name'] == 'Harvest Room' }.first
 
 p "Vendor Room ID: #{vendor_room['id']}"
 p "Harvest Room ID: #{harvest_room['id']}"
@@ -114,11 +114,11 @@ separator
 pad 'Item'
 client.item.create([
   {
-    Name: 'Buds',
     ProductCategoryName: 'Buds',
+    Name: 'Buds Item',
     UnitOfMeasureName: 'Grams',
     StrainName: "#{vendor_name} Strain",
-    Intermediaries: nil.
+    Intermediaries: nil,
     IntermediaryProductUsed: false,
     UnitCbdPercent: nil,
     UnitCbdContent: nil,
@@ -135,8 +135,8 @@ client.item.create([
     Ingredients: nil
   },
   {
-    Name: 'Tincture',
     ProductCategoryName: 'Infused',
+    Name: 'Tincture',
     UnitOfMeasureName: 'Each',
     StrainName: "#{vendor_name} Strain",
     Intermediaries: [
@@ -144,7 +144,7 @@ client.item.create([
         Name: 'Buds Item',
         Type: 'Buds'
       }
-    ].
+    ],
     IntermediaryProductUsed: false,
     UnitCbdPercent: nil,
     UnitCbdContent: nil,
