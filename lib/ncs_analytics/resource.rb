@@ -61,7 +61,8 @@ module NcsAnalytics
       end
 
       raise_request_errors
-      JSON.parse(@response.body)
+
+      return JSON.parse(@response.body) if @response.body
     end
 
     def raise_request_errors # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
