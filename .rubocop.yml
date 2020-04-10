@@ -2,6 +2,10 @@ require:
   - rubocop-performance
   - rubocop-rspec
 
+AllCops:
+  Exclude:
+    - 'bin/assessment'
+
 Layout/LineLength:
   Max: 1000
 
