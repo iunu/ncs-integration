@@ -5,6 +5,7 @@ require:
 AllCops:
   Exclude:
     - 'bin/assessment'
+    - 'vendor/**/*'
 
 Layout/LineLength:
   Max: 1000
