@@ -59,9 +59,11 @@ client.room.create([
 rooms = client.room.all
 vendor_room = rooms.select { |s| s['name'] == "#{vendor_name} Room" }.first
 harvest_room = rooms.select { |s| s['name'] == 'Harvest Room' }.first
+edibles_room = rooms.select { |s| s['name'] == 'Edibles Room' }.first
 
 p "Vendor Room ID: #{vendor_room['id']}"
 p "Harvest Room ID: #{harvest_room['id']}"
+p "Edibles Room ID: #{edibles_room['id']}"
 separator
 
 # Create item categories
@@ -118,8 +120,10 @@ client.item.create([
     Name: 'Buds Item',
     UnitOfMeasureName: 'Grams',
     StrainName: "#{vendor_name} Strain",
-    Intermediaries: nil,
+    Intermediaries: [],
     IntermediaryProductUsed: false,
+    AdministrationMethod: nil,
+    IntermediaryProductType: nil,
     UnitCbdPercent: nil,
     UnitCbdContent: nil,
     UnitCbdContentUnitOfMeasureName: nil,
@@ -146,6 +150,8 @@ client.item.create([
       }
     ],
     IntermediaryProductUsed: false,
+    AdministrationMethod: nil,
+    IntermediaryProductType: nil,
     UnitCbdPercent: nil,
     UnitCbdContent: nil,
     UnitCbdContentUnitOfMeasureName: nil,
@@ -215,7 +221,7 @@ pad 'Add tag labels to plants'
 
 client.plant.change_growth_phases([
   {
-    Id: vegetative.first,
+    Id: vegetatives.first,
     Label: nil,
     NewTag: 'ABC001',
     GrowthPhase: 'Flowering',
@@ -223,7 +229,7 @@ client.plant.change_growth_phases([
     GrowthDate: '2018-08-17'
   },
   {
-    Id: vegetative[1],
+    Id: vegetatives[1],
     Label: nil,
     NewTag: 'ABC002',
     GrowthPhase: 'Flowering',
@@ -255,9 +261,9 @@ pad 'Harvest Plants into the new Harvest'
 client.plant.harvest([
   Label: 'ABC001',
   HarvestedWetWeight: 101.99,
-  DryingRoomId: harvest_room['id'],
-  DryingRoomName: 'Harvest Room',
-  UnitOfWeightName: 'Grams',
+  HarvestedUnitOfWeightName: 'Grams',
+  RoomName: 'Harvest Room',
+  HarvestName: 'Harvest1',
   HarvestStartDate: '2018-08-19'
 ])
 
@@ -283,7 +289,11 @@ pad 'Update waste'
 
 client.harvest.update([
   Id: harvest['id'],
-  DryingRoomName: 'Edibles Room'
+  HarvestType: 'Product',
+  DryingRoomName: 'Edibles Room',
+  DryingRoomId: edibles_room['id'],
+  UnitOfWeightName: 'Grams',
+  HarvestStartDate: '2018-08-19'
 ])
 
 separator
@@ -314,7 +324,7 @@ separator
 # Sell and Transfer Package: Sell Package
 pad 'Sell and Transfer Package: Sell Package'
 
-client.sales.create([
+client.sale.create([
   SalesDateTime: '2018-08-21T12:00:00.000',
   SalesCustomerType: 'Transfer',
   Transactions: [
