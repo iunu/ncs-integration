@@ -9,7 +9,6 @@ module NcsAnalytics
     RESOURCE_NAME = nil
 
     include HTTParty
-    http_proxy ENV['QUOTAGUARDSTATIC_URL']
 
     headers 'content-type': 'application/json'
     logger ::Logger.new STDOUT
@@ -20,7 +19,7 @@ module NcsAnalytics
                 :uri,
                 :resource
 
-    def initialize(opts = {}) # rubocop:disable Metrics/AbcSize
+    def initialize(opts = {}) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
       @resource = self.class::RESOURCE_NAME || "#{self.class.name.split('::').last.downcase}s".to_sym
       @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
       @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
@@ -30,6 +29,11 @@ module NcsAnalytics
 
       self.class.base_uri @uri
       self.class.headers Authorization: "Bearer #{@api_key}"
+
+      if ENV['QUOTAGUARDSTATIC_URL'] # rubocop:disable Style/GuardClause
+        uri = URI(ENV['QUOTAGUARDSTATIC_URL'])
+        self.class.http_proxy "#{uri.scheme}://#{uri.user}:#{uri.password}@#{uri.host}", uri.port
+      end
     end
 
     def get(resource_id)
