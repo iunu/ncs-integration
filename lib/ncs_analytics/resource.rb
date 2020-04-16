@@ -24,16 +24,12 @@ module NcsAnalytics
       @debug    = opts[:debug] || NcsAnalytics.configuration.debug || false
       @api_key  = opts[:api_key] || NcsAnalytics.configuration.api_key
       @uri      = opts[:uri] || NcsAnalytics.configuration.uri
+      @proxy    = URI(ENV['QUOTAGUARDSTATIC_URL']) if ENV['QUOTAGUARDSTATIC_URL']
 
       sign_in
 
       self.class.base_uri @uri
       self.class.headers Authorization: "Bearer #{@api_key}"
-
-      if ENV['QUOTAGUARDSTATIC_URL'] # rubocop:disable Style/GuardClause
-        uri = URI(ENV['QUOTAGUARDSTATIC_URL'])
-        self.class.http_proxy "#{uri.scheme}://#{uri.host}", uri.port, uri.user, uri.password
-      end
     end
 
     def get(resource_id)
@@ -57,7 +53,18 @@ module NcsAnalytics
     def request(path = '', verb = :get, payload = '') # rubocop:disable Metrics/AbcSize
       puts "[#{verb.to_s.upcase}] /pos/#{@resource}/v1/#{path}" if @debug
 
-      @response = self.class.send(verb, "/pos/#{@resource}/v1/#{path}", body: payload)
+      options = { body: payload }
+
+      unless @proxy.nil?
+        options.merge!({
+          http_proxyaddr: @proxy.host,
+          http_proxyport: @proxy.port,
+          http_proxyuser: @proxy.user,
+          http_proxypass: @proxy.password
+        })
+      end
+
+      @response = self.class.send(verb, "/pos/#{@resource}/v1/#{path}", options)
 
       if @debug
         puts payload
