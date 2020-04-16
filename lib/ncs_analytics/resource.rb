@@ -56,13 +56,15 @@ module NcsAnalytics
       @response = self.class.send(verb, "/pos/#{@resource}/v1/#{path}", body: payload)
 
       if @debug
+        puts payload
         puts @response.response.code
         puts @response.headers
         puts @response.body
       end
 
       raise_request_errors
-      JSON.parse(@response.body)
+
+      return JSON.parse(@response.body) unless @response.body.empty?
     end
 
     def raise_request_errors # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
