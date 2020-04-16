@@ -32,7 +32,7 @@ module NcsAnalytics
 
       if ENV['QUOTAGUARDSTATIC_URL'] # rubocop:disable Style/GuardClause
         uri = URI(ENV['QUOTAGUARDSTATIC_URL'])
-        self.class.http_proxy "#{uri.scheme}://#{uri.user}:#{uri.password}@#{uri.host}", uri.port
+        self.class.http_proxy "#{uri.scheme}://#{uri.host}", uri.port, uri.user, uri.password
       end
     end
 
